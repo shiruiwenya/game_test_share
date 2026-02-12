@@ -1,0 +1,116 @@
+{
+  "generated_at": "2026-02-11T00:44:00Z",
+  "style": "cartoon",
+  "assets": [
+    {
+      "id": "bg_game",
+      "file": "bg_game.png",
+      "status": "generated",
+      "type": "background",
+      "width": 540,
+      "height": 960
+    },
+    {
+      "id": "bg_menu",
+      "file": "bg_menu.png",
+      "status": "generated",
+      "type": "background",
+      "width": 540,
+      "height": 960
+    },
+    {
+      "id": "logo_title",
+      "file": "logo_title.png",
+      "status": "generated",
+      "type": "sprite",
+      "width": 400,
+      "height": 120
+    },
+    {
+      "id": "veggie_tomato",
+      "file": "veggie_tomato.png",
+      "status": "generated",
+      "type": "sprite",
+      "width": 56,
+      "height": 56
+    },
+    {
+      "id": "veggie_carrot",
+      "file": "veggie_carrot.png",
+      "status": "generated",
+      "type": "sprite",
+      "width": 56,
+      "height": 56
+    },
+    {
+      "id": "veggie_eggplant",
+      "file": "veggie_eggplant.png",
+      "status": "generated",
+      "type": "sprite",
+      "width": 56,
+      "height": 56
+    },
+    {
+      "id": "veggie_broccoli",
+      "file": "veggie_broccoli.png",
+      "status": "generated",
+      "type": "sprite",
+      "width": 56,
+      "height": 56
+    },
+    {
+      "id": "veggie_corn",
+      "file": "veggie_corn.png",
+      "status": "generated",
+      "type": "sprite",
+      "width": 56,
+      "height": 56
+    },
+    {
+      "id": "veggie_chili",
+      "file": "veggie_chili.png",
+      "status": "generated",
+      "type": "sprite",
+      "width": 56,
+      "height": 56
+    },
+    {
+      "id": "special_stripe_h",
+      "file": "special_stripe_h.png",
+      "status": "generated",
+      "type": "sprite",
+      "width": 56,
+      "height": 56
+    },
+    {
+      "id": "special_stripe_v",
+      "file": "special_stripe_v.png",
+      "status": "generated",
+      "type": "sprite",
+      "width": 56,
+      "height": 56
+    },
+    {
+      "id": "special_rainbow",
+      "file": "special_rainbow.png",
+      "status": "generated",
+      "type": "sprite",
+      "width": 56,
+      "height": 56
+    }
+  ],
+  "skipped": [
+    { "id": "board_cell", "reason": "render_mode: placeholder" },
+    { "id": "cell_highlight", "reason": "render_mode: placeholder" },
+    { "id": "icon_star_empty", "reason": "render_mode: placeholder" },
+    { "id": "icon_star_filled", "reason": "render_mode: placeholder" },
+    { "id": "icon_moves", "reason": "render_mode: placeholder" },
+    { "id": "icon_score", "reason": "render_mode: placeholder" },
+    { "id": "btn_start", "reason": "render_mode: placeholder" },
+    { "id": "btn_level", "reason": "render_mode: placeholder" },
+    { "id": "btn_pause", "reason": "render_mode: placeholder" },
+    { "id": "panel_top", "reason": "render_mode: placeholder" },
+    { "id": "panel_target", "reason": "render_mode: placeholder" },
+    { "id": "particle_sparkle", "reason": "render_mode: placeholder" }
+  ]
+}

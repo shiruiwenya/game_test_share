@@ -1,0 +1,248 @@
+::1 - - [11/Feb/2026 10:09:30] "GET / HTTP/1.1" 200 -
+::1 - - [11/Feb/2026 10:09:30] "GET /js/config.js HTTP/1.1" 200 -
+::1 - - [11/Feb/2026 10:09:30] "GET /js/sound.js HTTP/1.1" 200 -
+::1 - - [11/Feb/2026 10:09:30] "GET /js/board.js HTTP/1.1" 200 -
+::1 - - [11/Feb/2026 10:09:30] "GET /js/renderer.js HTTP/1.1" 200 -
+::1 - - [11/Feb/2026 10:09:30] "GET /js/game.js HTTP/1.1" 200 -
+::1 - - [11/Feb/2026 10:09:30] "GET /assets/bg_game.png HTTP/1.1" 200 -
+::1 - - [11/Feb/2026 10:09:30] "GET /assets/bg_menu.png HTTP/1.1" 200 -
+::1 - - [11/Feb/2026 10:09:30] "GET /assets/logo_title.png HTTP/1.1" 200 -
+::1 - - [11/Feb/2026 10:09:30] "GET /assets/veggie_tomato.png HTTP/1.1" 200 -
+::1 - - [11/Feb/2026 10:09:30] "GET /assets/veggie_carrot.png HTTP/1.1" 200 -
+::1 - - [11/Feb/2026 10:09:30] "GET /assets/veggie_eggplant.png HTTP/1.1" 200 -
+::1 - - [11/Feb/2026 10:09:30] "GET /assets/veggie_broccoli.png HTTP/1.1" 200 -
+::1 - - [11/Feb/2026 10:09:30] "GET /assets/veggie_corn.png HTTP/1.1" 200 -
+::1 - - [11/Feb/2026 10:09:30] "GET /assets/veggie_chili.png HTTP/1.1" 200 -
+::1 - - [11/Feb/2026 10:09:30] "GET /assets/special_stripe_h.png HTTP/1.1" 200 -
+::1 - - [11/Feb/2026 10:09:30] "GET /assets/special_stripe_v.png HTTP/1.1" 200 -
+::1 - - [11/Feb/2026 10:09:30] "GET /assets/special_rainbow.png HTTP/1.1" 200 -
+::1 - - [11/Feb/2026 10:09:30] code 404, message File not found
+::1 - - [11/Feb/2026 10:09:30] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [11/Feb/2026 10:09:32] code 404, message File not found
+::1 - - [11/Feb/2026 10:09:32] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [11/Feb/2026 10:11:26] code 404, message File not found
+::1 - - [11/Feb/2026 10:11:26] "GET /favicon.ico HTTP/1.1" 404 -
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/opt/homebrew/Cellar/python@3.14/3.14.2_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 1432, in <module>
+    test(
+    ~~~~^
+        HandlerClass=handler_class,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+        tls_password=tls_key_password,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.2_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 1348, in test
+    server = ServerClass(addr, HandlerClass)
+  File "/opt/homebrew/Cellar/python@3.14/3.14.2_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 457, in __init__
+    self.server_bind()
+    ~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.2_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 1419, in server_bind
+    return super().server_bind()
+           ~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.2_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 148, in server_bind
+    socketserver.TCPServer.server_bind(self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.2_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 48] Address already in use
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/opt/homebrew/Cellar/python@3.14/3.14.2_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 1432, in <module>
+    test(
+    ~~~~^
+        HandlerClass=handler_class,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+        tls_password=tls_key_password,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.2_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 1348, in test
+    server = ServerClass(addr, HandlerClass)
+  File "/opt/homebrew/Cellar/python@3.14/3.14.2_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 457, in __init__
+    self.server_bind()
+    ~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.2_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 1419, in server_bind
+    return super().server_bind()
+           ~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.2_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 148, in server_bind
+    socketserver.TCPServer.server_bind(self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.2_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 48] Address already in use
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/opt/homebrew/Cellar/python@3.14/3.14.2_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 1432, in <module>
+    test(
+    ~~~~^
+        HandlerClass=handler_class,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+        tls_password=tls_key_password,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.2_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 1348, in test
+    server = ServerClass(addr, HandlerClass)
+  File "/opt/homebrew/Cellar/python@3.14/3.14.2_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 457, in __init__
+    self.server_bind()
+    ~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.2_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 1419, in server_bind
+    return super().server_bind()
+           ~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.2_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 148, in server_bind
+    socketserver.TCPServer.server_bind(self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.2_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 48] Address already in use
+::1 - - [11/Feb/2026 23:46:45] "GET / HTTP/1.1" 200 -
+::1 - - [11/Feb/2026 23:46:45] "GET /js/config.js HTTP/1.1" 200 -
+::1 - - [11/Feb/2026 23:46:45] "GET /js/board.js HTTP/1.1" 200 -
+::1 - - [11/Feb/2026 23:46:45] "GET /js/sound.js HTTP/1.1" 200 -
+::1 - - [11/Feb/2026 23:46:45] "GET /js/renderer.js HTTP/1.1" 200 -
+::1 - - [11/Feb/2026 23:46:45] "GET /js/game.js HTTP/1.1" 200 -
+::1 - - [11/Feb/2026 23:46:45] "GET /assets/bg_game.png HTTP/1.1" 200 -
+::1 - - [11/Feb/2026 23:46:45] "GET /assets/bg_menu.png HTTP/1.1" 200 -
+::1 - - [11/Feb/2026 23:46:45] "GET /assets/logo_title.png HTTP/1.1" 200 -
+::1 - - [11/Feb/2026 23:46:45] "GET /assets/veggie_tomato.png HTTP/1.1" 200 -
+::1 - - [11/Feb/2026 23:46:45] "GET /assets/veggie_carrot.png HTTP/1.1" 200 -
+::1 - - [11/Feb/2026 23:46:45] "GET /assets/veggie_eggplant.png HTTP/1.1" 200 -
+::1 - - [11/Feb/2026 23:46:45] "GET /assets/veggie_broccoli.png HTTP/1.1" 200 -
+::1 - - [11/Feb/2026 23:46:45] "GET /assets/special_stripe_h.png HTTP/1.1" 200 -
+::1 - - [11/Feb/2026 23:46:45] "GET /assets/veggie_corn.png HTTP/1.1" 200 -
+::1 - - [11/Feb/2026 23:46:45] "GET /assets/veggie_chili.png HTTP/1.1" 200 -
+::1 - - [11/Feb/2026 23:46:45] "GET /assets/special_stripe_v.png HTTP/1.1" 200 -
+::1 - - [11/Feb/2026 23:46:45] "GET /assets/special_rainbow.png HTTP/1.1" 200 -
+::1 - - [11/Feb/2026 23:47:02] code 404, message File not found
+::1 - - [11/Feb/2026 23:47:02] code 404, message File not found
+::1 - - [11/Feb/2026 23:47:02] "GET /assets/audio/bgm_gameplay.mp3 HTTP/1.1" 404 -
+::1 - - [11/Feb/2026 23:47:02] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [12/Feb/2026 09:05:58] "GET / HTTP/1.1" 304 -
+::1 - - [12/Feb/2026 09:05:58] "GET /js/config.js HTTP/1.1" 304 -
+::1 - - [12/Feb/2026 09:05:58] "GET /js/game.js HTTP/1.1" 304 -
+::1 - - [12/Feb/2026 09:05:58] "GET /js/sound.js HTTP/1.1" 304 -
+::1 - - [12/Feb/2026 09:05:58] "GET /js/board.js HTTP/1.1" 304 -
+::1 - - [12/Feb/2026 09:05:58] "GET /js/renderer.js HTTP/1.1" 304 -
+::1 - - [12/Feb/2026 09:05:58] "GET /assets/logo_title.png HTTP/1.1" 304 -
+::1 - - [12/Feb/2026 09:05:58] "GET /assets/veggie_tomato.png HTTP/1.1" 304 -
+::1 - - [12/Feb/2026 09:05:58] "GET /assets/veggie_carrot.png HTTP/1.1" 304 -
+::1 - - [12/Feb/2026 09:05:58] "GET /assets/bg_game.png HTTP/1.1" 304 -
+::1 - - [12/Feb/2026 09:05:58] "GET /assets/bg_menu.png HTTP/1.1" 304 -
+::1 - - [12/Feb/2026 09:05:58] "GET /assets/veggie_eggplant.png HTTP/1.1" 304 -
+::1 - - [12/Feb/2026 09:05:58] "GET /assets/veggie_corn.png HTTP/1.1" 304 -
+::1 - - [12/Feb/2026 09:05:58] "GET /assets/veggie_chili.png HTTP/1.1" 304 -
+::1 - - [12/Feb/2026 09:05:58] "GET /assets/veggie_broccoli.png HTTP/1.1" 304 -
+::1 - - [12/Feb/2026 09:05:58] "GET /assets/special_stripe_h.png HTTP/1.1" 304 -
+::1 - - [12/Feb/2026 09:05:58] "GET /assets/special_stripe_v.png HTTP/1.1" 304 -
+::1 - - [12/Feb/2026 09:05:58] "GET /assets/special_rainbow.png HTTP/1.1" 304 -
+::1 - - [12/Feb/2026 09:21:02] "GET / HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:21:04] "GET /js/config.js HTTP/1.1" 304 -
+::1 - - [12/Feb/2026 09:21:04] "GET /js/game.js HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:21:04] "GET /js/board.js HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:21:04] "GET /js/sound.js HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:21:04] "GET /js/renderer.js HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:21:06] "GET /assets/bg_game.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:21:06] "GET /assets/bg_menu.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:21:06] "GET /assets/veggie_carrot.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:21:06] "GET /assets/logo_title.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:21:06] "GET /assets/veggie_broccoli.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:21:06] "GET /assets/veggie_tomato.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:21:06] "GET /assets/special_stripe_v.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:21:06] "GET /assets/special_stripe_h.png HTTP/1.1" 200 -
+::ffff:127.0.0.1 - - [12/Feb/2026 09:21:06] "GET /assets/special_rainbow.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:21:06] "GET /assets/veggie_eggplant.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:21:25] "GET /assets/veggie_corn.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:21:25] "GET /assets/veggie_chili.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:21:49] code 404, message File not found
+::1 - - [12/Feb/2026 09:21:49] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [12/Feb/2026 09:26:52] "GET / HTTP/1.1" 304 -
+::1 - - [12/Feb/2026 09:26:52] "GET /js/config.js HTTP/1.1" 304 -
+::1 - - [12/Feb/2026 09:26:52] "GET /js/board.js HTTP/1.1" 304 -
+::1 - - [12/Feb/2026 09:26:52] "GET /js/sound.js HTTP/1.1" 304 -
+::1 - - [12/Feb/2026 09:26:52] "GET /js/renderer.js HTTP/1.1" 304 -
+::1 - - [12/Feb/2026 09:26:52] "GET /js/game.js HTTP/1.1" 304 -
+::1 - - [12/Feb/2026 09:26:52] "GET /assets/bg_menu.png HTTP/1.1" 304 -
+::1 - - [12/Feb/2026 09:26:52] "GET /assets/logo_title.png HTTP/1.1" 304 -
+::1 - - [12/Feb/2026 09:26:52] "GET /assets/veggie_tomato.png HTTP/1.1" 304 -
+::1 - - [12/Feb/2026 09:26:52] "GET /assets/bg_game.png HTTP/1.1" 304 -
+::1 - - [12/Feb/2026 09:26:52] "GET /assets/veggie_eggplant.png HTTP/1.1" 304 -
+::1 - - [12/Feb/2026 09:26:52] "GET /assets/veggie_carrot.png HTTP/1.1" 304 -
+::1 - - [12/Feb/2026 09:26:52] "GET /assets/veggie_broccoli.png HTTP/1.1" 304 -
+::1 - - [12/Feb/2026 09:26:52] "GET /assets/veggie_corn.png HTTP/1.1" 304 -
+::1 - - [12/Feb/2026 09:26:52] "GET /assets/special_stripe_h.png HTTP/1.1" 304 -
+::1 - - [12/Feb/2026 09:26:52] "GET /assets/veggie_chili.png HTTP/1.1" 304 -
+::1 - - [12/Feb/2026 09:26:52] "GET /assets/special_stripe_v.png HTTP/1.1" 304 -
+::1 - - [12/Feb/2026 09:26:52] "GET /assets/special_rainbow.png HTTP/1.1" 304 -
+::1 - - [12/Feb/2026 09:27:12] "GET / HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:12] "GET /js/config.js HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:12] "GET /js/game.js HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:12] "GET /js/sound.js HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:12] "GET /js/board.js HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:12] "GET /js/renderer.js HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:12] "GET /assets/logo_title.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:12] "GET /assets/bg_game.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:12] "GET /assets/veggie_tomato.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:12] "GET /assets/bg_menu.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:12] "GET /assets/veggie_carrot.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:12] "GET /assets/veggie_eggplant.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:12] "GET /assets/veggie_broccoli.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:12] "GET /assets/veggie_corn.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:12] "GET /assets/special_stripe_h.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:12] "GET /assets/special_stripe_v.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:12] "GET /assets/veggie_chili.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:12] "GET /assets/special_rainbow.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:12] code 404, message File not found
+::1 - - [12/Feb/2026 09:27:12] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [12/Feb/2026 09:27:22] "GET / HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:22] "GET /js/renderer.js HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:22] "GET /js/config.js HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:22] "GET /js/sound.js HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:22] "GET /js/board.js HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:22] "GET /js/game.js HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:22] "GET /assets/bg_menu.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:22] "GET /assets/logo_title.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:22] "GET /assets/veggie_tomato.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:22] "GET /assets/veggie_carrot.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:22] "GET /assets/bg_game.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:22] "GET /assets/veggie_eggplant.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:22] "GET /assets/veggie_broccoli.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:22] "GET /assets/veggie_chili.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:22] "GET /assets/veggie_corn.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:22] "GET /assets/special_stripe_h.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:22] "GET /assets/special_stripe_v.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:22] "GET /assets/special_rainbow.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:22] code 404, message File not found
+::1 - - [12/Feb/2026 09:27:22] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [12/Feb/2026 09:27:23] "GET / HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:23] "GET /js/config.js HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:23] "GET /js/board.js HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:23] "GET /js/sound.js HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:23] "GET /js/renderer.js HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:23] "GET /js/game.js HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:23] "GET /assets/bg_menu.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:23] "GET /assets/bg_game.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:23] "GET /assets/veggie_tomato.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:23] "GET /assets/logo_title.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:23] "GET /assets/veggie_carrot.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:23] "GET /assets/veggie_eggplant.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:23] "GET /assets/veggie_broccoli.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:23] "GET /assets/veggie_corn.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:23] "GET /assets/veggie_chili.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:23] "GET /assets/special_stripe_h.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:23] "GET /assets/special_rainbow.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:23] "GET /assets/special_stripe_v.png HTTP/1.1" 200 -
+::1 - - [12/Feb/2026 09:27:23] code 404, message File not found
+::1 - - [12/Feb/2026 09:27:23] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [12/Feb/2026 09:32:53] code 404, message File not found
+::1 - - [12/Feb/2026 09:32:53] "GET /favicon.ico HTTP/1.1" 404 -

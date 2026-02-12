@@ -1,0 +1,1003 @@
+{
+  "game_meta": {
+    "name": "蔬菜消消乐",
+    "type": "match-3",
+    "description": "一款卡通风格的蔬菜主题三消游戏，玩家通过交换相邻蔬菜使三个或以上相同蔬菜连成一线来消除，在有限步数内达成分数目标即可过关。",
+    "gameplay": "核心循环：玩家点击一个蔬菜后再点击相邻蔬菜进行交换，如果交换后水平或垂直方向形成3个及以上相同蔬菜的连线则消除并得分，消除后上方蔬菜下落并从顶部补充新蔬菜，可能触发连锁消除（cascade）。4个连线产生条纹特殊蔬菜（可消除整行/列），5个连线产生彩虹蔬菜（可消除棋盘上所有同种蔬菜）。每关有步数限制和分数目标，达标获1-3星评价。5个关卡难度递进，棋盘从6x6到9x9，蔬菜种类从4种到6种。",
+    "style": "cartoon",
+    "difficulty": "medium",
+    "players": 1,
+    "controls": {
+      "player1": {
+        "select": ["Mouse_Left"],
+        "pause": ["Escape"]
+      }
+    }
+  },
+  "canvas": {
+    "width": 540,
+    "height": 960,
+    "background_color": "#F5E6D0",
+    "background_image": "bg_game"
+  },
+  "layout": {
+    "elements": [
+      {
+        "id": "background",
+        "type": "background",
+        "x": 0,
+        "y": 0,
+        "width": 540,
+        "height": 960,
+        "z_index": 0,
+        "asset_id": "bg_game"
+      },
+      {
+        "id": "top_panel",
+        "type": "panel",
+        "x": 10,
+        "y": 10,
+        "width": 520,
+        "height": 120,
+        "z_index": 5,
+        "description": "顶部信息面板，包含关卡号、分数、步数"
+      },
+      {
+        "id": "level_label",
+        "type": "text",
+        "x": 30,
+        "y": 25,
+        "width": 120,
+        "height": 40,
+        "z_index": 6,
+        "text": "关卡 1",
+        "font_size": 24,
+        "color": "#FFFFFF"
+      },
+      {
+        "id": "score_icon",
+        "type": "icon",
+        "x": 170,
+        "y": 22,
+        "width": 36,
+        "height": 36,
+        "z_index": 6,
+        "description": "星星分数图标"
+      },
+      {
+        "id": "score_label",
+        "type": "text",
+        "x": 212,
+        "y": 25,
+        "width": 120,
+        "height": 40,
+        "z_index": 6,
+        "text": "0 / 3000",
+        "font_size": 22,
+        "color": "#FFFFFF"
+      },
+      {
+        "id": "moves_icon",
+        "type": "icon",
+        "x": 400,
+        "y": 22,
+        "width": 36,
+        "height": 36,
+        "z_index": 6,
+        "description": "步数图标（脚印）"
+      },
+      {
+        "id": "moves_label",
+        "type": "text",
+        "x": 442,
+        "y": 25,
+        "width": 80,
+        "height": 40,
+        "z_index": 6,
+        "text": "20",
+        "font_size": 26,
+        "color": "#FFFFFF"
+      },
+      {
+        "id": "star_bar",
+        "type": "progress_bar",
+        "x": 30,
+        "y": 75,
+        "width": 480,
+        "height": 20,
+        "z_index": 6,
+        "description": "星级进度条，标示1星、2星、3星分数线"
+      },
+      {
+        "id": "star_1_marker",
+        "type": "icon",
+        "x": 170,
+        "y": 95,
+        "width": 24,
+        "height": 24,
+        "z_index": 7,
+        "description": "1星标记"
+      },
+      {
+        "id": "star_2_marker",
+        "type": "icon",
+        "x": 310,
+        "y": 95,
+        "width": 24,
+        "height": 24,
+        "z_index": 7,
+        "description": "2星标记"
+      },
+      {
+        "id": "star_3_marker",
+        "type": "icon",
+        "x": 490,
+        "y": 95,
+        "width": 24,
+        "height": 24,
+        "z_index": 7,
+        "description": "3星标记"
+      },
+      {
+        "id": "board_container",
+        "type": "container",
+        "x": 15,
+        "y": 145,
+        "width": 510,
+        "height": 510,
+        "z_index": 2,
+        "description": "棋盘容器区域（最大9x9，每格约56px），实际大小随关卡调整"
+      },
+      {
+        "id": "combo_popup",
+        "type": "text",
+        "x": 140,
+        "y": 420,
+        "width": 260,
+        "height": 60,
+        "z_index": 20,
+        "visible": false,
+        "text": "COMBO x3!",
+        "font_size": 36,
+        "color": "#FF6B00",
+        "description": "连击提示文字，消除时弹出"
+      },
+      {
+        "id": "target_panel",
+        "type": "panel",
+        "x": 10,
+        "y": 670,
+        "width": 520,
+        "height": 100,
+        "z_index": 5,
+        "description": "目标面板：展示本关需要消除的蔬菜种类和数量"
+      },
+      {
+        "id": "target_title",
+        "type": "text",
+        "x": 200,
+        "y": 678,
+        "width": 140,
+        "height": 30,
+        "z_index": 6,
+        "text": "-- 关卡目标 --",
+        "font_size": 16,
+        "color": "#8B6914"
+      },
+      {
+        "id": "target_items",
+        "type": "container",
+        "x": 30,
+        "y": 710,
+        "width": 480,
+        "height": 50,
+        "z_index": 6,
+        "description": "目标蔬菜图标+数量，水平排列"
+      },
+      {
+        "id": "pause_button",
+        "type": "button",
+        "x": 230,
+        "y": 790,
+        "width": 80,
+        "height": 40,
+        "z_index": 10,
+        "text": "暂停",
+        "description": "暂停按钮"
+      }
+    ]
+  },
+  "assets": [
+    {
+      "id": "bg_game",
+      "type": "background",
+      "width": 540,
+      "height": 960,
+      "description": "温暖的农场背景，浅黄绿色调，远处有农田和小山丘轮廓，近处有木栅栏和草地，整体柔和模糊作为游戏背景，卡通风格",
+      "style_hints": "cartoon, warm, pastoral, soft focus, farm theme",
+      "transparent": false,
+      "placeholder": "#F5E6D0",
+      "render_mode": "image"
+    },
+    {
+      "id": "veggie_tomato",
+      "type": "sprite",
+      "width": 56,
+      "height": 56,
+      "description": "圆润饱满的红色番茄，顶部有绿色蒂和两片小叶子，表面有光泽高光，大大的可爱卡通眼睛和微笑表情，正面朝向",
+      "style_hints": "cartoon, cute, glossy, vibrant red",
+      "transparent": true,
+      "placeholder": "#E74C3C",
+      "facing": "front",
+      "render_mode": "image",
+      "collision": { "mode": "none" }
+    },
+    {
+      "id": "veggie_carrot",
+      "type": "sprite",
+      "width": 56,
+      "height": 56,
+      "description": "橙色胡萝卜，锥形身体微微弯曲，顶部有蓬松的绿色叶子，表面有几条横纹，大大的可爱卡通眼睛和开心表情，正面朝向",
+      "style_hints": "cartoon, cute, glossy, vibrant orange",
+      "transparent": true,
+      "placeholder": "#E67E22",
+      "facing": "front",
+      "render_mode": "image",
+      "collision": { "mode": "none" }
+    },
+    {
+      "id": "veggie_eggplant",
+      "type": "sprite",
+      "width": 56,
+      "height": 56,
+      "description": "紫色茄子，椭圆形身体带有光泽，顶部有绿色花萼，大大的可爱卡通眼睛和淘气表情，正面朝向",
+      "style_hints": "cartoon, cute, glossy, deep purple",
+      "transparent": true,
+      "placeholder": "#8E44AD",
+      "facing": "front",
+      "render_mode": "image",
+      "collision": { "mode": "none" }
+    },
+    {
+      "id": "veggie_broccoli",
+      "type": "sprite",
+      "width": 56,
+      "height": 56,
+      "description": "深绿色西兰花，蓬松的花冠像一棵小树，短粗的浅绿色茎，大大的可爱卡通眼睛和温和笑容，正面朝向",
+      "style_hints": "cartoon, cute, glossy, forest green",
+      "transparent": true,
+      "placeholder": "#27AE60",
+      "facing": "front",
+      "render_mode": "image",
+      "collision": { "mode": "none" }
+    },
+    {
+      "id": "veggie_corn",
+      "type": "sprite",
+      "width": 56,
+      "height": 56,
+      "description": "金黄色玉米棒，外皮半包裹露出金色玉米粒，顶部有棕色须丝，大大的可爱卡通眼睛和灿烂笑容，正面朝向",
+      "style_hints": "cartoon, cute, glossy, golden yellow",
+      "transparent": true,
+      "placeholder": "#F1C40F",
+      "facing": "front",
+      "render_mode": "image",
+      "collision": { "mode": "none" }
+    },
+    {
+      "id": "veggie_chili",
+      "type": "sprite",
+      "width": 56,
+      "height": 56,
+      "description": "鲜红色辣椒，修长微弯的身体，顶部有绿色蒂，大大的可爱卡通眼睛和调皮坏笑表情，头顶冒出小火苗，正面朝向",
+      "style_hints": "cartoon, cute, glossy, hot red, spicy",
+      "transparent": true,
+      "placeholder": "#C0392B",
+      "facing": "front",
+      "render_mode": "image",
+      "collision": { "mode": "none" }
+    },
+    {
+      "id": "special_stripe_h",
+      "type": "sprite",
+      "width": 56,
+      "height": 56,
+      "description": "特殊蔬菜标记 - 水平条纹光效覆盖层，半透明金色水平条纹波浪动感，中心有横向箭头符号",
+      "style_hints": "cartoon, glowing, golden, horizontal stripe effect",
+      "transparent": true,
+      "placeholder": "#F39C12",
+      "render_mode": "image",
+      "collision": { "mode": "none" }
+    },
+    {
+      "id": "special_stripe_v",
+      "type": "sprite",
+      "width": 56,
+      "height": 56,
+      "description": "特殊蔬菜标记 - 垂直条纹光效覆盖层，半透明金色垂直条纹波浪动感，中心有纵向箭头符号",
+      "style_hints": "cartoon, glowing, golden, vertical stripe effect",
+      "transparent": true,
+      "placeholder": "#F39C12",
+      "render_mode": "image",
+      "collision": { "mode": "none" }
+    },
+    {
+      "id": "special_rainbow",
+      "type": "sprite",
+      "width": 56,
+      "height": 56,
+      "description": "彩虹蔬菜特殊道具，一个闪耀的七彩宝石球体，表面有彩虹色流光效果，中心有白色星形高光",
+      "style_hints": "cartoon, rainbow, sparkling, magical, glowing",
+      "transparent": true,
+      "placeholder": "#E91E63",
+      "render_mode": "image",
+      "collision": { "mode": "none" }
+    },
+    {
+      "id": "board_cell",
+      "type": "ui",
+      "width": 56,
+      "height": 56,
+      "description": "棋盘格子背景，浅棕色圆角方形，略带木质纹理质感",
+      "style_hints": "cartoon, wooden, warm brown, rounded",
+      "transparent": false,
+      "placeholder": "#D4A574",
+      "render_mode": "placeholder"
+    },
+    {
+      "id": "cell_highlight",
+      "type": "ui",
+      "width": 56,
+      "height": 56,
+      "description": "选中蔬菜的高亮边框，金黄色发光边框，圆角",
+      "style_hints": "cartoon, golden glow, selection indicator",
+      "transparent": true,
+      "placeholder": "#FFD700",
+      "render_mode": "placeholder"
+    },
+    {
+      "id": "icon_star_empty",
+      "type": "icon",
+      "width": 24,
+      "height": 24,
+      "description": "空星星图标，灰色轮廓星形",
+      "style_hints": "cartoon, UI icon",
+      "transparent": true,
+      "placeholder": "#BDC3C7",
+      "render_mode": "placeholder"
+    },
+    {
+      "id": "icon_star_filled",
+      "type": "icon",
+      "width": 24,
+      "height": 24,
+      "description": "实心星星图标，金黄色填充星形",
+      "style_hints": "cartoon, UI icon, golden",
+      "transparent": true,
+      "placeholder": "#F1C40F",
+      "render_mode": "placeholder"
+    },
+    {
+      "id": "icon_moves",
+      "type": "icon",
+      "width": 36,
+      "height": 36,
+      "description": "步数图标，白色脚印形状",
+      "style_hints": "cartoon, UI icon, white",
+      "transparent": true,
+      "placeholder": "#FFFFFF",
+      "render_mode": "placeholder"
+    },
+    {
+      "id": "icon_score",
+      "type": "icon",
+      "width": 36,
+      "height": 36,
+      "description": "分数图标，金色星星",
+      "style_hints": "cartoon, UI icon, golden",
+      "transparent": true,
+      "placeholder": "#F1C40F",
+      "render_mode": "placeholder"
+    },
+    {
+      "id": "btn_start",
+      "type": "ui",
+      "width": 220,
+      "height": 60,
+      "description": "开始游戏按钮，绿色圆角矩形，白色文字",
+      "style_hints": "cartoon, green, rounded, button",
+      "transparent": false,
+      "placeholder": "#27AE60",
+      "render_mode": "placeholder"
+    },
+    {
+      "id": "btn_level",
+      "type": "ui",
+      "width": 80,
+      "height": 80,
+      "description": "关卡选择按钮，圆形，内有关卡数字和星星",
+      "style_hints": "cartoon, circular, level button",
+      "transparent": false,
+      "placeholder": "#3498DB",
+      "render_mode": "placeholder"
+    },
+    {
+      "id": "btn_pause",
+      "type": "ui",
+      "width": 80,
+      "height": 40,
+      "description": "暂停按钮，棕色圆角矩形",
+      "style_hints": "cartoon, brown, rounded, small button",
+      "transparent": false,
+      "placeholder": "#8B6914",
+      "render_mode": "placeholder"
+    },
+    {
+      "id": "panel_top",
+      "type": "ui",
+      "width": 520,
+      "height": 120,
+      "description": "顶部信息面板背景，深绿色半透明圆角矩形，带木质边框",
+      "style_hints": "cartoon, dark green, semi-transparent, wooden border",
+      "transparent": false,
+      "placeholder": "#2D5016",
+      "render_mode": "placeholder"
+    },
+    {
+      "id": "panel_target",
+      "type": "ui",
+      "width": 520,
+      "height": 100,
+      "description": "目标面板背景，浅米色圆角矩形，带棕色边框",
+      "style_hints": "cartoon, light beige, rounded, brown border",
+      "transparent": false,
+      "placeholder": "#FFF3E0",
+      "render_mode": "placeholder"
+    },
+    {
+      "id": "logo_title",
+      "type": "sprite",
+      "width": 400,
+      "height": 120,
+      "description": "游戏标题Logo，'蔬菜消消乐'五个大字，每个字用不同蔬菜颜色（红、橙、紫、绿、黄），卡通气泡字体，字体边缘有白色描边和阴影，周围装饰有小蔬菜图案",
+      "style_hints": "cartoon, colorful, playful typography, vegetable theme",
+      "transparent": true,
+      "placeholder": "#FF6B35",
+      "render_mode": "image"
+    },
+    {
+      "id": "bg_menu",
+      "type": "background",
+      "width": 540,
+      "height": 960,
+      "description": "主菜单背景，色彩鲜艳的卡通农场场景，蓝天白云，绿色草地，远处红色谷仓和风车，前景有各种蔬菜装饰排列，整体明亮欢快",
+      "style_hints": "cartoon, colorful, cheerful, farm scene, vegetables",
+      "transparent": false,
+      "placeholder": "#87CEEB",
+      "render_mode": "image"
+    },
+    {
+      "id": "particle_sparkle",
+      "type": "sprite",
+      "width": 16,
+      "height": 16,
+      "description": "消除时的闪光粒子，金色四角星形光点",
+      "style_hints": "cartoon, sparkle, golden, particle",
+      "transparent": true,
+      "placeholder": "#FFD700",
+      "render_mode": "placeholder"
+    }
+  ],
+  "mechanics": {
+    "scoring": {
+      "initial_score": 0,
+      "score_events": [
+        { "event": "match_3", "points": 50 },
+        { "event": "match_4", "points": 120 },
+        { "event": "match_5", "points": 300 },
+        { "event": "match_L_T", "points": 200 },
+        { "event": "special_stripe_activate", "points": 150 },
+        { "event": "special_rainbow_activate", "points": 500 }
+      ]
+    },
+    "combo": {
+      "description": "连锁消除（cascade）时，每次连锁的得分乘以递增倍率",
+      "base_multiplier": 1.0,
+      "multiplier_increment": 0.5,
+      "max_multiplier": 5.0,
+      "cascade_formula": "score = base_points * (1 + 0.5 * (cascade_level - 1))"
+    },
+    "star_rating": {
+      "description": "根据分数给予1-3星评价，各关卡阈值不同",
+      "thresholds_per_level": {
+        "1": { "star_1": 1000, "star_2": 2000, "star_3": 3000 },
+        "2": { "star_1": 2000, "star_2": 4000, "star_3": 6000 },
+        "3": { "star_1": 3500, "star_2": 6000, "star_3": 9000 },
+        "4": { "star_1": 5000, "star_2": 8000, "star_3": 12000 },
+        "5": { "star_1": 7000, "star_2": 11000, "star_3": 16000 }
+      }
+    },
+    "special_gems": {
+      "description": "特殊蔬菜生成规则",
+      "stripe_horizontal": {
+        "trigger": "水平方向4个连线",
+        "effect": "激活时消除整行"
+      },
+      "stripe_vertical": {
+        "trigger": "垂直方向4个连线",
+        "effect": "激活时消除整列"
+      },
+      "rainbow": {
+        "trigger": "5个连线（任意方向）",
+        "effect": "与任意蔬菜交换后，消除棋盘上所有该种蔬菜"
+      }
+    },
+    "levels": [
+      {
+        "level_number": 1,
+        "description": "入门关 - 欢迎来到菜园",
+        "grid_rows": 6,
+        "grid_cols": 6,
+        "veggie_types": ["tomato", "carrot", "eggplant", "broccoli"],
+        "max_moves": 25,
+        "target_score": 1000,
+        "targets": [
+          { "veggie": "tomato", "count": 10 },
+          { "veggie": "carrot", "count": 10 }
+        ],
+        "win_condition": "达到目标分数且消除指定数量蔬菜"
+      },
+      {
+        "level_number": 2,
+        "description": "进阶关 - 丰收时节",
+        "grid_rows": 7,
+        "grid_cols": 7,
+        "veggie_types": ["tomato", "carrot", "eggplant", "broccoli", "corn"],
+        "max_moves": 22,
+        "target_score": 2000,
+        "targets": [
+          { "veggie": "tomato", "count": 15 },
+          { "veggie": "broccoli", "count": 15 },
+          { "veggie": "corn", "count": 10 }
+        ],
+        "win_condition": "达到目标分数且消除指定数量蔬菜"
+      },
+      {
+        "level_number": 3,
+        "description": "中级关 - 蔬菜大会",
+        "grid_rows": 8,
+        "grid_cols": 8,
+        "veggie_types": ["tomato", "carrot", "eggplant", "broccoli", "corn"],
+        "max_moves": 20,
+        "target_score": 3500,
+        "targets": [
+          { "veggie": "eggplant", "count": 20 },
+          { "veggie": "corn", "count": 20 },
+          { "veggie": "carrot", "count": 15 }
+        ],
+        "win_condition": "达到目标分数且消除指定数量蔬菜"
+      },
+      {
+        "level_number": 4,
+        "description": "挑战关 - 辣椒来了",
+        "grid_rows": 8,
+        "grid_cols": 8,
+        "veggie_types": ["tomato", "carrot", "eggplant", "broccoli", "corn", "chili"],
+        "max_moves": 18,
+        "target_score": 5000,
+        "targets": [
+          { "veggie": "chili", "count": 15 },
+          { "veggie": "tomato", "count": 20 },
+          { "veggie": "broccoli", "count": 20 },
+          { "veggie": "eggplant", "count": 15 }
+        ],
+        "win_condition": "达到目标分数且消除指定数量蔬菜"
+      },
+      {
+        "level_number": 5,
+        "description": "终极关 - 菜园大丰收",
+        "grid_rows": 9,
+        "grid_cols": 9,
+        "veggie_types": ["tomato", "carrot", "eggplant", "broccoli", "corn", "chili"],
+        "max_moves": 15,
+        "target_score": 7000,
+        "targets": [
+          { "veggie": "tomato", "count": 25 },
+          { "veggie": "carrot", "count": 25 },
+          { "veggie": "eggplant", "count": 20 },
+          { "veggie": "broccoli", "count": 20 },
+          { "veggie": "corn", "count": 15 },
+          { "veggie": "chili", "count": 15 }
+        ],
+        "win_condition": "达到目标分数且消除指定数量蔬菜"
+      }
+    ]
+  },
+  "game_flow": {
+    "initial_state": "menu",
+    "states": [
+      {
+        "id": "menu",
+        "description": "主菜单界面，显示游戏标题和开始按钮",
+        "transitions": [
+          { "to": "level_select", "trigger": "点击开始游戏按钮" }
+        ]
+      },
+      {
+        "id": "level_select",
+        "description": "关卡选择界面，显示5个关卡按钮，已通关的显示星星数，未解锁的灰色",
+        "transitions": [
+          { "to": "level_intro", "trigger": "点击已解锁的关卡按钮" },
+          { "to": "menu", "trigger": "点击返回按钮" }
+        ]
+      },
+      {
+        "id": "level_intro",
+        "description": "关卡开始前弹窗，显示关卡号、目标蔬菜及数量、步数限制",
+        "transitions": [
+          { "to": "playing", "trigger": "点击开始按钮" },
+          { "to": "level_select", "trigger": "点击返回按钮" }
+        ]
+      },
+      {
+        "id": "playing",
+        "description": "游戏进行中，玩家在棋盘上交换蔬菜进行消除",
+        "transitions": [
+          { "to": "paused", "trigger": "点击暂停按钮或按Escape" },
+          { "to": "level_complete", "trigger": "达成所有目标且步数>0" },
+          { "to": "level_failed", "trigger": "步数用完但未达成目标" }
+        ]
+      },
+      {
+        "id": "paused",
+        "description": "暂停界面，显示继续、重玩、退出选项",
+        "transitions": [
+          { "to": "playing", "trigger": "点击继续按钮" },
+          { "to": "playing", "trigger": "重玩当前关卡" },
+          { "to": "level_select", "trigger": "点击退出按钮" }
+        ]
+      },
+      {
+        "id": "level_complete",
+        "description": "过关界面，显示分数、星星评价、消除统计",
+        "transitions": [
+          { "to": "level_select", "trigger": "点击返回关卡选择" },
+          { "to": "level_intro", "trigger": "点击下一关（如果不是最后一关）" }
+        ]
+      },
+      {
+        "id": "level_failed",
+        "description": "失败界面，显示已得分数和鼓励信息",
+        "transitions": [
+          { "to": "playing", "trigger": "点击重试按钮" },
+          { "to": "level_select", "trigger": "点击返回关卡选择" }
+        ]
+      }
+    ]
+  },
+  "game_data": {
+    "core_mechanics": {
+      "matching": {
+        "approach": "swap-adjacent",
+        "description": "玩家点击一个蔬菜选中，再点击上下左右相邻蔬菜进行交换。交换后检测是否形成3+连线，如果没有则交换无效并自动还原。",
+        "rationale": "交换式三消是最经典的Match-3操作模式（Bejeweled/Candy Crush风格），上手简单，操作反馈明确。",
+        "references": ["https://www.gamedeveloper.com/design/45-match-3-mechanics", "https://retrostylegames.com/blog/what-is-match-3/"]
+      },
+      "cascade_system": {
+        "approach": "gravity-fill",
+        "description": "消除后上方蔬菜受重力下落填充空位，顶部随机生成新蔬菜。下落后再次检测匹配，可能产生连锁消除(cascade)。每次cascade得分递增倍率。",
+        "rationale": "Cascade是Match-3游戏核心乐趣来源之一，给玩家'意外惊喜'的满足感，也增加了策略深度（预判下落后的匹配）。",
+        "cascade_multiplier": "第1次消除1x，第2次1.5x，第3次2x ... 最高5x",
+        "references": ["https://www.gamedeveloper.com/design/45-match-3-mechanics"]
+      },
+      "special_generation": {
+        "approach": "match-size-based",
+        "description": "4连线生成条纹特殊蔬菜（行/列炸弹），5连线生成彩虹蔬菜（全屏同色消除）。L型/T型组合生成炸弹蔬菜（消除周围3x3区域，暂定为后续扩展）。",
+        "rationale": "特殊道具是Match-3游戏的核心策略元素，Candy Crush等头部产品验证了4连/5连产生特殊gem的设计非常成功。"
+      },
+      "board_initialization": {
+        "approach": "no-initial-matches",
+        "description": "初始棋盘随机生成时必须确保没有现成的3连线，避免开局就自动消除。算法：生成每个格子时检查是否与左边2个或上边2个形成连线，如果是则重新随机。",
+        "rationale": "行业标准做法，确保玩家的第一次操作是有意义的。"
+      },
+      "hint_system": {
+        "approach": "auto-hint-after-idle",
+        "description": "玩家5秒无操作后，自动高亮提示一个可行的交换位置。如果棋盘上没有可行交换（dead board），自动洗牌重排。",
+        "rationale": "避免玩家卡住，提升体验。开心消消乐等国内头部产品均有此功能。"
+      },
+      "difficulty_curve": {
+        "approach": "multi-dimension-scaling",
+        "description": "难度通过多个维度递进：棋盘大小（6x6到9x9）、蔬菜种类（4到6种）、步数限制（25到15步）、目标数量和种类数。种类越多，随机匹配概率越低；步数越少，容错空间越小。",
+        "rationale": "参考开心消消乐关卡设计理念：难度递进要平滑，每关有明确的新挑战元素引入。"
+      }
+    },
+    "veggie_config": {
+      "tomato": { "color": "#E74C3C", "name": "番茄", "asset_id": "veggie_tomato" },
+      "carrot": { "color": "#E67E22", "name": "胡萝卜", "asset_id": "veggie_carrot" },
+      "eggplant": { "color": "#8E44AD", "name": "茄子", "asset_id": "veggie_eggplant" },
+      "broccoli": { "color": "#27AE60", "name": "西兰花", "asset_id": "veggie_broccoli" },
+      "corn": { "color": "#F1C40F", "name": "玉米", "asset_id": "veggie_corn" },
+      "chili": { "color": "#C0392B", "name": "辣椒", "asset_id": "veggie_chili" }
+    }
+  },
+  "ui": {
+    "screens": [
+      {
+        "id": "screen_menu",
+        "type": "start",
+        "elements": [
+          { "id": "menu_bg", "type": "image", "asset_id": "bg_menu", "x": 0, "y": 0 },
+          { "id": "menu_logo", "type": "image", "asset_id": "logo_title", "x": 70, "y": 180 },
+          { "id": "menu_start_btn", "type": "button", "text": "开始游戏", "x": 160, "y": 500, "width": 220, "height": 60, "color": "#FFFFFF", "font_size": 28, "action": "go_level_select" },
+          { "id": "menu_subtitle", "type": "label", "text": "卡通蔬菜 快乐消除", "x": 150, "y": 320, "font_size": 20, "color": "#6B4226" }
+        ]
+      },
+      {
+        "id": "screen_level_select",
+        "type": "level_select",
+        "elements": [
+          { "id": "ls_title", "type": "label", "text": "选择关卡", "x": 180, "y": 80, "font_size": 36, "color": "#4A2F1A" },
+          { "id": "ls_level_1", "type": "button", "text": "1", "x": 70, "y": 250, "width": 80, "height": 80, "action": "start_level_1" },
+          { "id": "ls_level_2", "type": "button", "text": "2", "x": 230, "y": 250, "width": 80, "height": 80, "action": "start_level_2" },
+          { "id": "ls_level_3", "type": "button", "text": "3", "x": 390, "y": 250, "width": 80, "height": 80, "action": "start_level_3" },
+          { "id": "ls_level_4", "type": "button", "text": "4", "x": 150, "y": 400, "width": 80, "height": 80, "action": "start_level_4" },
+          { "id": "ls_level_5", "type": "button", "text": "5", "x": 310, "y": 400, "width": 80, "height": 80, "action": "start_level_5" },
+          { "id": "ls_back_btn", "type": "button", "text": "返回", "x": 210, "y": 600, "width": 120, "height": 50, "action": "go_menu" }
+        ]
+      },
+      {
+        "id": "screen_level_intro",
+        "type": "popup",
+        "elements": [
+          { "id": "intro_panel", "type": "panel", "x": 60, "y": 250, "width": 420, "height": 400 },
+          { "id": "intro_level_name", "type": "label", "text": "关卡 1", "x": 190, "y": 270, "font_size": 32, "color": "#4A2F1A" },
+          { "id": "intro_description", "type": "label", "text": "欢迎来到菜园", "x": 160, "y": 320, "font_size": 18, "color": "#6B4226" },
+          { "id": "intro_targets", "type": "container", "x": 100, "y": 370, "width": 340, "height": 120, "description": "目标蔬菜图标+数量" },
+          { "id": "intro_moves", "type": "label", "text": "步数：25", "x": 200, "y": 510, "font_size": 22, "color": "#C0392B" },
+          { "id": "intro_start_btn", "type": "button", "text": "开始", "x": 180, "y": 560, "width": 180, "height": 55, "action": "start_playing" },
+          { "id": "intro_back_btn", "type": "button", "text": "返回", "x": 210, "y": 630, "width": 120, "height": 40, "action": "go_level_select" }
+        ]
+      },
+      {
+        "id": "screen_paused",
+        "type": "pause",
+        "elements": [
+          { "id": "pause_overlay", "type": "panel", "x": 0, "y": 0, "width": 540, "height": 960, "color": "rgba(0,0,0,0.5)" },
+          { "id": "pause_panel", "type": "panel", "x": 100, "y": 300, "width": 340, "height": 300 },
+          { "id": "pause_title", "type": "label", "text": "暂停", "x": 220, "y": 320, "font_size": 36, "color": "#4A2F1A" },
+          { "id": "pause_resume_btn", "type": "button", "text": "继续", "x": 170, "y": 390, "width": 200, "height": 50, "action": "resume" },
+          { "id": "pause_retry_btn", "type": "button", "text": "重玩", "x": 170, "y": 460, "width": 200, "height": 50, "action": "retry" },
+          { "id": "pause_quit_btn", "type": "button", "text": "退出", "x": 170, "y": 530, "width": 200, "height": 50, "action": "quit_to_levels" }
+        ]
+      },
+      {
+        "id": "screen_level_complete",
+        "type": "result",
+        "elements": [
+          { "id": "complete_panel", "type": "panel", "x": 60, "y": 220, "width": 420, "height": 450 },
+          { "id": "complete_title", "type": "label", "text": "过关!", "x": 210, "y": 245, "font_size": 42, "color": "#27AE60" },
+          { "id": "complete_stars", "type": "container", "x": 160, "y": 300, "width": 220, "height": 60, "description": "星星评价展示（1-3星）" },
+          { "id": "complete_score", "type": "label", "text": "分数: 3500", "x": 190, "y": 380, "font_size": 26, "color": "#4A2F1A" },
+          { "id": "complete_stats", "type": "container", "x": 100, "y": 420, "width": 340, "height": 100, "description": "消除统计" },
+          { "id": "complete_next_btn", "type": "button", "text": "下一关", "x": 170, "y": 550, "width": 200, "height": 55, "action": "next_level" },
+          { "id": "complete_levels_btn", "type": "button", "text": "关卡选择", "x": 180, "y": 620, "width": 180, "height": 40, "action": "go_level_select" }
+        ]
+      },
+      {
+        "id": "screen_level_failed",
+        "type": "result",
+        "elements": [
+          { "id": "failed_panel", "type": "panel", "x": 80, "y": 280, "width": 380, "height": 350 },
+          { "id": "failed_title", "type": "label", "text": "步数用完了", "x": 160, "y": 305, "font_size": 32, "color": "#C0392B" },
+          { "id": "failed_score", "type": "label", "text": "分数: 1200", "x": 195, "y": 370, "font_size": 24, "color": "#4A2F1A" },
+          { "id": "failed_encourage", "type": "label", "text": "再试一次，你可以的!", "x": 145, "y": 420, "font_size": 18, "color": "#6B4226" },
+          { "id": "failed_retry_btn", "type": "button", "text": "重试", "x": 170, "y": 480, "width": 200, "height": 55, "action": "retry" },
+          { "id": "failed_levels_btn", "type": "button", "text": "关卡选择", "x": 180, "y": 555, "width": 180, "height": 40, "action": "go_level_select" }
+        ]
+      }
+    ],
+    "fonts": {
+      "primary": "Arial, sans-serif",
+      "score": "Arial Black, Arial, sans-serif",
+      "title": "Arial Black, Impact, sans-serif"
+    },
+    "colors": {
+      "primary": "#4CAF50",
+      "secondary": "#8BC34A",
+      "accent": "#FF9800",
+      "text": "#4A2F1A",
+      "text_light": "#FFFFFF",
+      "panel_bg": "#2D5016",
+      "panel_border": "#1A3A0A",
+      "board_bg": "#C8A46E",
+      "cell_bg": "#D4A574",
+      "cell_highlight": "#FFD700",
+      "btn_green": "#27AE60",
+      "btn_blue": "#3498DB",
+      "btn_red": "#E74C3C",
+      "btn_brown": "#8B6914"
+    }
+  },
+  "effects": {
+    "match_disappear": {
+      "type": "scale_fade",
+      "duration_ms": 300,
+      "description": "匹配成功的蔬菜缩小并淡出，同时播放闪光粒子"
+    },
+    "veggie_fall": {
+      "type": "gravity_drop",
+      "duration_ms": 200,
+      "easing": "ease-in-quad",
+      "description": "蔬菜从上方掉落到新位置，有轻微弹跳"
+    },
+    "swap_animation": {
+      "type": "slide",
+      "duration_ms": 200,
+      "description": "两个蔬菜滑动交换位置"
+    },
+    "invalid_swap": {
+      "type": "shake_return",
+      "duration_ms": 300,
+      "description": "无效交换时蔬菜先移动一半然后抖动返回原位"
+    },
+    "combo_popup": {
+      "type": "scale_bounce_fade",
+      "duration_ms": 800,
+      "description": "连击文字从中心弹出放大然后缩小淡出，文字内容随连击数变化"
+    },
+    "special_create": {
+      "type": "flash_glow",
+      "duration_ms": 500,
+      "description": "特殊蔬菜生成时周围闪烁白光"
+    },
+    "stripe_activate": {
+      "type": "line_blast",
+      "duration_ms": 400,
+      "description": "条纹蔬菜激活时发出横/竖光线贯穿整行/列"
+    },
+    "rainbow_activate": {
+      "type": "rainbow_wave",
+      "duration_ms": 600,
+      "description": "彩虹蔬菜激活时彩色波纹从中心扩散，目标蔬菜依次闪烁消除"
+    },
+    "star_earn": {
+      "type": "rotate_sparkle",
+      "duration_ms": 500,
+      "description": "获得星星时星星旋转放大并发出光芒"
+    },
+    "cell_selected": {
+      "type": "pulse_glow",
+      "duration_ms": 600,
+      "loop": true,
+      "description": "选中蔬菜的高亮边框持续脉冲发光"
+    },
+    "hint_highlight": {
+      "type": "gentle_pulse",
+      "duration_ms": 1000,
+      "loop": true,
+      "description": "提示蔬菜轻微上下浮动并发出柔和光晕"
+    },
+    "level_complete_celebration": {
+      "type": "confetti_burst",
+      "duration_ms": 2000,
+      "description": "过关时从顶部飞出彩色蔬菜纸片"
+    }
+  },
+  "audio": {
+    "audio_style": "cartoon",
+    "sfx": [
+      {
+        "id": "sfx_select",
+        "trigger": "select",
+        "audio_mode": "synthesized",
+        "description": "选中蔬菜时的短促清脆点击音，明亮高频'叮'一声"
+      },
+      {
+        "id": "sfx_swap",
+        "trigger": "swap",
+        "audio_mode": "synthesized",
+        "description": "交换蔬菜时的轻快滑动音，柔和的'嗖'一声"
+      },
+      {
+        "id": "sfx_invalid_swap",
+        "trigger": "invalid_swap",
+        "audio_mode": "synthesized",
+        "description": "无效交换时的低沉拒绝音，短促的'嗡嗡'两下"
+      },
+      {
+        "id": "sfx_match_3",
+        "trigger": "match_3",
+        "audio_mode": "synthesized",
+        "description": "3消时的清脆消除音，上升音阶'叮叮叮'三声"
+      },
+      {
+        "id": "sfx_match_4",
+        "trigger": "match_4",
+        "audio_mode": "synthesized",
+        "description": "4消时的愉悦消除音，比3消更响亮，音调更高，带有闪亮尾音"
+      },
+      {
+        "id": "sfx_match_5",
+        "trigger": "match_5",
+        "audio_mode": "synthesized",
+        "description": "5消时的华丽消除音，快速上升琶音加闪亮余韵，非常满足"
+      },
+      {
+        "id": "sfx_cascade",
+        "trigger": "cascade",
+        "audio_mode": "synthesized",
+        "description": "连锁消除时每次cascade音调递增，形成上升音阶，第1次C，第2次D，第3次E..."
+      },
+      {
+        "id": "sfx_combo",
+        "trigger": "combo",
+        "audio_mode": "synthesized",
+        "description": "连击达到一定次数时的额外欢呼音效，明亮的和弦加闪光音"
+      },
+      {
+        "id": "sfx_special_create",
+        "trigger": "special_create",
+        "audio_mode": "synthesized",
+        "description": "生成特殊蔬菜时的神奇音效，上升的魔法音加闪亮铃声"
+      },
+      {
+        "id": "sfx_special_activate",
+        "trigger": "special_activate",
+        "audio_mode": "synthesized",
+        "description": "激活特殊蔬菜时的爆发音效，强力的能量释放音"
+      },
+      {
+        "id": "sfx_veggie_fall",
+        "trigger": "veggie_fall",
+        "audio_mode": "synthesized",
+        "description": "蔬菜下落到位时的轻柔着陆音，柔和的'嘟'一声"
+      },
+      {
+        "id": "sfx_star_earn",
+        "trigger": "star_earn",
+        "audio_mode": "synthesized",
+        "description": "获得星星时的胜利铃声，明亮上升琶音"
+      },
+      {
+        "id": "sfx_level_complete",
+        "trigger": "level_complete",
+        "audio_mode": "synthesized",
+        "description": "过关成功时的庆祝音效，欢快的上升和弦序列加结尾铃声"
+      },
+      {
+        "id": "sfx_level_failed",
+        "trigger": "level_failed",
+        "audio_mode": "synthesized",
+        "description": "关卡失败时的遗憾音效，缓慢的下降音调，柔和不刺耳"
+      },
+      {
+        "id": "sfx_button_click",
+        "trigger": "click",
+        "audio_mode": "synthesized",
+        "description": "UI按钮点击的通用反馈音，短促的卡通按钮音'嘀'"
+      },
+      {
+        "id": "sfx_no_moves",
+        "trigger": "warning",
+        "audio_mode": "synthesized",
+        "description": "步数即将用完时（剩余3步）的警告音，急促的两声提示"
+      }
+    ],
+    "bgm": []
+  },
+  "game_state_api": {
+    "hints": [
+      "board[][] - 二维数组存储棋盘状态，每个格子包含蔬菜类型和特殊标记",
+      "selectedCell - 当前选中的格子坐标 {row, col} 或 null",
+      "currentLevel - 当前关卡配置对象",
+      "score - 当前分数",
+      "movesLeft - 剩余步数",
+      "targets - 各蔬菜消除进度 {veggie: string, current: number, target: number}[]",
+      "cascadeLevel - 当前连锁层数（用于计算倍率）",
+      "isAnimating - 是否正在播放动画（动画中禁止输入）",
+      "gameState - 当前游戏状态（对应 game_flow 中的 state id）",
+      "levelProgress - 各关卡通关星数 {[level]: stars}",
+      "hintTimer - 提示计时器（5秒无操作后显示提示）"
+    ]
+  }
+}

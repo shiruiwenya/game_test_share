@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>蔬菜消消乐 - 框线图</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #E8E0D8;
+      color: #333;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+      color: #4A2F1A;
+      font-size: 28px;
+    }
+    h2 {
+      margin-top: 40px;
+      margin-bottom: 15px;
+      color: #2D5016;
+      border-bottom: 2px solid #2D5016;
+      padding-bottom: 8px;
+      font-size: 22px;
+    }
+    h3 {
+      margin-top: 25px;
+      margin-bottom: 10px;
+      color: #4A2F1A;
+      font-size: 18px;
+    }
+    .subtitle {
+      text-align: center;
+      color: #6B4226;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+
+    /* Screen container */
+    .screen-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 40px;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+    .screen-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .screen-label {
+      font-size: 16px;
+      font-weight: bold;
+      color: #4A2F1A;
+      margin-bottom: 8px;
+    }
+
+    /* Canvas frame */
+    .canvas {
+      width: 540px;
+      height: 960px;
+      position: relative;
+      border: 3px solid #4A2F1A;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    }
+
+    /* Generic element */
+    .element {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: #666;
+      text-align: center;
+      line-height: 1.2;
+    }
+    .element.dashed {
+      border: 2px dashed #999;
+    }
+
+    /* Panel styles */
+    .panel-dark {
+      background: #2D5016;
+      border-radius: 12px;
+      border: 3px solid #1A3A0A;
+    }
+    .panel-light {
+      background: #FFF3E0;
+      border-radius: 10px;
+      border: 2px solid #C8A46E;
+    }
+    .panel-overlay {
+      background: rgba(255,248,235,0.95);
+      border-radius: 16px;
+      border: 3px solid #C8A46E;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    /* Text styles */
+    .text-white { color: #FFFFFF; font-weight: bold; }
+    .text-brown { color: #4A2F1A; font-weight: bold; }
+    .text-green { color: #27AE60; font-weight: bold; }
+    .text-red { color: #C0392B; font-weight: bold; }
+    .text-gold { color: #8B6914; }
+
+    /* Button styles */
+    .btn {
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: bold;
+      color: #fff;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-green { background: #27AE60; }
+    .btn-blue { background: #3498DB; }
+    .btn-brown { background: #8B6914; }
+    .btn-red { background: #E74C3C; }
+    .btn-gray { background: #95A5A6; }
+    .btn-orange { background: #FF9800; }
+
+    /* Board grid */
+    .board-area {
+      background: #C8A46E;
+      border-radius: 12px;
+      border: 3px solid #A0834A;
+      display: grid;
+      padding: 4px;
+      gap: 2px;
+    }
+    .board-cell {
+      background: #D4A574;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: bold;
+      color: #fff;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+
+    /* Veggie placeholders */
+    .veggie-tomato { background: #E74C3C; border-radius: 50%; }
+    .veggie-carrot { background: #E67E22; border-radius: 30%; }
+    .veggie-eggplant { background: #8E44AD; border-radius: 40%; }
+    .veggie-broccoli { background: #27AE60; border-radius: 45%; }
+    .veggie-corn { background: #F1C40F; border-radius: 35%; }
+    .veggie-chili { background: #C0392B; border-radius: 25%; }
+    .veggie-special-h { background: linear-gradient(0deg, #F39C12 30%, #FFD700 50%, #F39C12 70%); border-radius: 50%; }
+    .veggie-special-v { background: linear-gradient(90deg, #F39C12 30%, #FFD700 50%, #F39C12 70%); border-radius: 50%; }
+    .veggie-rainbow { background: linear-gradient(135deg, #E74C3C, #F1C40F, #27AE60, #3498DB, #8E44AD); border-radius: 50%; }
+
+    /* Progress bar */
+    .progress-bar {
+      background: #1A3A0A;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #E74C3C, #F1C40F, #27AE60);
+      border-radius: 10px;
+      width: 60%;
+    }
+    .star-marker {
+      position: absolute;
+      top: -2px;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    /* Icon */
+    .icon-circle {
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    /* Level button */
+    .level-btn {
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: bold;
+      font-size: 28px;
+      border: 3px solid rgba(255,255,255,0.3);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    }
+    .level-btn .stars {
+      font-size: 10px;
+      margin-top: 2px;
+    }
+    .level-btn.locked {
+      background: #95A5A6 !important;
+      opacity: 0.7;
+    }
+
+    /* Combo popup */
+    .combo-text {
+      color: #FF6B00;
+      font-size: 36px;
+      font-weight: bold;
+      text-shadow: 2px 2px 0 #fff, -1px -1px 0 #fff;
+      animation: combo-pulse 0.8s ease-out;
+    }
+    @keyframes combo-pulse {
+      0% { transform: scale(0.5); opacity: 0; }
+      50% { transform: scale(1.3); opacity: 1; }
+      100% { transform: scale(1); opacity: 0.8; }
+    }
+
+    /* Table styles */
+    table {
+      border-collapse: collapse;
+      margin: 10px 0 20px 0;
+      width: 100%;
+      max-width: 900px;
+    }
+    th, td {
+      border: 1px solid #C8A46E;
+      padding: 8px 12px;
+      text-align: left;
+      font-size: 13px;
+    }
+    th {
+      background: #2D5016;
+      color: #fff;
+      font-size: 13px;
+    }
+    tr:nth-child(even) { background: #FFF8EB; }
+    tr:nth-child(odd) { background: #FFFFFF; }
+
+    .veggie-swatch {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      vertical-align: middle;
+      margin-right: 6px;
+      border: 1px solid rgba(0,0,0,0.1);
+    }
+
+    /* Info list */
+    .info-list {
+      list-style: none;
+      padding: 0;
+    }
+    .info-list li {
+      padding: 6px 0;
+      font-size: 14px;
+      border-bottom: 1px dotted #C8A46E;
+    }
+    .info-list li:last-child { border-bottom: none; }
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: bold;
+      margin-left: 4px;
+    }
+    .tag-image { background: #E8F5E9; color: #2E7D32; }
+    .tag-placeholder { background: #FFF3E0; color: #E65100; }
+    .tag-synth { background: #E3F2FD; color: #1565C0; }
+
+    .highlight-box {
+      background: #FFF8E1;
+      border: 2px solid #FFB300;
+      border-radius: 8px;
+      padding: 16px;
+      margin: 15px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>蔬菜消消乐 - 界面布局框线图</h1>
+  <p class="subtitle">Match-3 | Cartoon Style | 540 x 960 | 5 Levels</p>
+
+  <!-- ============================================================ -->
+  <h2>1. 界面总览</h2>
+  <!-- ============================================================ -->
+
+  <div class="screen-section">
+
+    <!-- ===== MENU SCREEN ===== -->
+    <div class="screen-wrapper">
+      <div class="screen-label">主菜单 (menu)</div>
+      <div class="canvas" style="background: linear-gradient(180deg, #87CEEB 0%, #98D8A0 50%, #7CB342 100%);">
+        <!-- Sky and farm background placeholder -->
+        <div class="element" style="left:0;top:0;width:540px;height:960px;background:linear-gradient(180deg, #87CEEB 0%, #B8E6B0 40%, #7CB342 70%, #558B2F 100%);z-index:0;opacity:0.6;"></div>
+        <!-- Farm decorations -->
+        <div class="element" style="left:20px;top:600px;width:500px;height:3px;background:#A0834A;z-index:1;"></div>
+        <div class="element" style="left:40px;top:580px;width:3px;height:30px;background:#8B6914;z-index:1;"></div>
+        <div class="element" style="left:120px;top:580px;width:3px;height:30px;background:#8B6914;z-index:1;"></div>
+        <div class="element" style="left:200px;top:580px;width:3px;height:30px;background:#8B6914;z-index:1;"></div>
+        <div class="element" style="left:280px;top:580px;width:3px;height:30px;background:#8B6914;z-index:1;"></div>
+        <div class="element" style="left:360px;top:580px;width:3px;height:30px;background:#8B6914;z-index:1;"></div>
+        <div class="element" style="left:440px;top:580px;width:3px;height:30px;background:#8B6914;z-index:1;"></div>
+
+        <!-- Title Logo placeholder -->
+        <div class="element" style="left:70px;top:180px;width:400px;height:120px;background:rgba(255,107,53,0.15);border-radius:16px;z-index:2;">
+          <div style="font-size:42px;font-weight:bold;color:#FF6B35;text-shadow:3px 3px 0 #fff,-1px -1px 0 #fff;">
+            蔬菜消消乐
+          </div>
+        </div>
+
+        <!-- Subtitle -->
+        <div class="element" style="left:150px;top:320px;width:240px;height:30px;z-index:2;">
+          <div style="font-size:18px;color:#4A2F1A;font-weight:bold;">卡通蔬菜 快乐消除</div>
+        </div>
+
+        <!-- Decorative veggies -->
+        <div class="element" style="left:60px;top:400px;width:44px;height:44px;z-index:3;">
+          <div class="veggie-tomato" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;">番茄</div>
+        </div>
+        <div class="element" style="left:140px;top:380px;width:44px;height:44px;z-index:3;">
+          <div class="veggie-carrot" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;">胡萝卜</div>
+        </div>
+        <div class="element" style="left:220px;top:395px;width:44px;height:44px;z-index:3;">
+          <div class="veggie-broccoli" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;">西兰花</div>
+        </div>
+        <div class="element" style="left:300px;top:380px;width:44px;height:44px;z-index:3;">
+          <div class="veggie-corn" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:9px;color:#333;">玉米</div>
+        </div>
+        <div class="element" style="left:380px;top:400px;width:44px;height:44px;z-index:3;">
+          <div class="veggie-eggplant" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;">茄子</div>
+        </div>
+        <div class="element" style="left:440px;top:385px;width:44px;height:44px;z-index:3;">
+          <div class="veggie-chili" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;">辣椒</div>
+        </div>
+
+        <!-- Start Button -->
+        <div class="element" style="left:160px;top:500px;width:220px;height:60px;z-index:5;">
+          <div class="btn btn-green" style="width:220px;height:60px;font-size:26px;border-radius:30px;box-shadow:0 4px 12px rgba(0,0,0,0.2);">
+            开始游戏
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== LEVEL SELECT SCREEN ===== -->
+    <div class="screen-wrapper">
+      <div class="screen-label">关卡选择 (level_select)</div>
+      <div class="canvas" style="background: linear-gradient(180deg, #FFF8E1, #F5E6D0);">
+        <!-- Title -->
+        <div class="element text-brown" style="left:170px;top:70px;width:200px;height:50px;font-size:34px;">
+          选择关卡
+        </div>
+
+        <!-- Decorative line -->
+        <div class="element" style="left:140px;top:120px;width:260px;height:3px;background:#C8A46E;"></div>
+
+        <!-- Level buttons row 1 -->
+        <div class="element" style="left:70px;top:230px;width:80px;height:80px;z-index:2;">
+          <div class="level-btn btn-green" style="width:80px;height:80px;">
+            1
+            <span class="stars">&#9733;&#9733;&#9733;</span>
+          </div>
+        </div>
+        <div class="element" style="left:230px;top:230px;width:80px;height:80px;z-index:2;">
+          <div class="level-btn btn-blue" style="width:80px;height:80px;">
+            2
+            <span class="stars">&#9733;&#9733;&#9734;</span>
+          </div>
+        </div>
+        <div class="element" style="left:390px;top:230px;width:80px;height:80px;z-index:2;">
+          <div class="level-btn btn-orange" style="width:80px;height:80px;">
+            3
+            <span class="stars">&#9733;&#9734;&#9734;</span>
+          </div>
+        </div>
+
+        <!-- Level buttons row 2 -->
+        <div class="element" style="left:150px;top:380px;width:80px;height:80px;z-index:2;">
+          <div class="level-btn btn-red" style="width:80px;height:80px;">
+            4
+            <span class="stars">&#9734;&#9734;&#9734;</span>
+          </div>
+        </div>
+        <div class="element" style="left:310px;top:380px;width:80px;height:80px;z-index:2;">
+          <div class="level-btn locked" style="width:80px;height:80px;">
+            5
+            <span class="stars" style="font-size:16px;">&#128274;</span>
+          </div>
+        </div>
+
+        <!-- Path lines connecting levels -->
+        <svg style="position:absolute;left:0;top:0;width:540px;height:960px;z-index:1;pointer-events:none;">
+          <path d="M 110,310 Q 170,340 270,270" stroke="#C8A46E" stroke-width="3" fill="none" stroke-dasharray="8,4"/>
+          <path d="M 270,310 Q 350,340 430,270" stroke="#C8A46E" stroke-width="3" fill="none" stroke-dasharray="8,4"/>
+          <path d="M 430,310 Q 380,380 230,420" stroke="#C8A46E" stroke-width="3" fill="none" stroke-dasharray="8,4"/>
+          <path d="M 230,420 Q 300,440 350,420" stroke="#C8A46E" stroke-width="3" fill="none" stroke-dasharray="8,4"/>
+        </svg>
+
+        <!-- Level info text -->
+        <div class="element" style="left:60px;top:520px;width:420px;height:160px;z-index:2;">
+          <div style="width:100%;text-align:left;font-size:13px;color:#6B4226;line-height:1.8;">
+            <div><strong>关卡 1</strong>: 6x6棋盘 | 4种蔬菜 | 25步 | 入门</div>
+            <div><strong>关卡 2</strong>: 7x7棋盘 | 5种蔬菜 | 22步 | 进阶</div>
+            <div><strong>关卡 3</strong>: 8x8棋盘 | 5种蔬菜 | 20步 | 中等</div>
+            <div><strong>关卡 4</strong>: 8x8棋盘 | 6种蔬菜 | 18步 | 挑战</div>
+            <div><strong>关卡 5</strong>: 9x9棋盘 | 6种蔬菜 | 15步 | 终极</div>
+          </div>
+        </div>
+
+        <!-- Back button -->
+        <div class="element" style="left:210px;top:720px;width:120px;height:50px;z-index:2;">
+          <div class="btn btn-brown" style="width:120px;height:50px;font-size:18px;border-radius:25px;">
+            返回
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="screen-section">
+
+    <!-- ===== GAME PLAYING SCREEN ===== -->
+    <div class="screen-wrapper">
+      <div class="screen-label">游戏界面 (playing) - 关卡3示例 (8x8)</div>
+      <div class="canvas" style="background: #F5E6D0;">
+        <!-- Background -->
+        <div class="element" style="left:0;top:0;width:540px;height:960px;background:linear-gradient(180deg,#E8F5E9 0%,#F5E6D0 30%,#F5E6D0 100%);z-index:0;"></div>
+
+        <!-- Top panel -->
+        <div class="element panel-dark" style="left:10px;top:10px;width:520px;height:120px;z-index:5;"></div>
+
+        <!-- Level label -->
+        <div class="element text-white" style="left:25px;top:22px;width:100px;height:35px;z-index:6;font-size:22px;">
+          关卡 3
+        </div>
+
+        <!-- Score -->
+        <div class="element" style="left:168px;top:22px;width:30px;height:30px;z-index:6;">
+          <div style="color:#F1C40F;font-size:24px;">&#9733;</div>
+        </div>
+        <div class="element text-white" style="left:200px;top:22px;width:140px;height:35px;z-index:6;font-size:20px;justify-content:flex-start;">
+          4200 / 9000
+        </div>
+
+        <!-- Moves -->
+        <div class="element" style="left:400px;top:18px;width:36px;height:36px;z-index:6;">
+          <div class="icon-circle" style="width:36px;height:36px;background:#C0392B;font-size:11px;">步</div>
+        </div>
+        <div class="element text-white" style="left:442px;top:22px;width:60px;height:35px;z-index:6;font-size:26px;">
+          12
+        </div>
+
+        <!-- Star progress bar -->
+        <div class="element" style="left:25px;top:70px;width:490px;height:18px;z-index:6;">
+          <div class="progress-bar" style="width:490px;height:18px;">
+            <div class="progress-fill" style="width:47%;"></div>
+            <div class="star-marker" style="left:38%;">&#9733;</div>
+            <div class="star-marker" style="left:66%;">&#9733;</div>
+            <div class="star-marker" style="left:98%;">&#9733;</div>
+          </div>
+        </div>
+
+        <!-- Star labels -->
+        <div class="element" style="left:195px;top:90px;width:30px;height:16px;z-index:7;font-size:10px;color:#F1C40F;">1&#9733;</div>
+        <div class="element" style="left:332px;top:90px;width:30px;height:16px;z-index:7;font-size:10px;color:#F1C40F;">2&#9733;</div>
+        <div class="element" style="left:488px;top:90px;width:30px;height:16px;z-index:7;font-size:10px;color:#F1C40F;">3&#9733;</div>
+
+        <!-- Board area (8x8) -->
+        <div class="element" style="left:22px;top:145px;width:496px;height:496px;z-index:2;">
+          <div class="board-area" style="width:496px;height:496px;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(8,1fr);">
+            <!-- Row 1 -->
+            <div class="board-cell"><div class="veggie-tomato" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-carrot" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-broccoli" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-corn" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-eggplant" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-tomato" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-corn" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-carrot" style="width:38px;height:38px;"></div></div>
+            <!-- Row 2 -->
+            <div class="board-cell"><div class="veggie-eggplant" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-corn" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-tomato" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-broccoli" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-carrot" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-eggplant" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-broccoli" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-tomato" style="width:38px;height:38px;"></div></div>
+            <!-- Row 3 -->
+            <div class="board-cell"><div class="veggie-broccoli" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-tomato" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell" style="border:3px solid #FFD700;box-shadow:0 0 8px #FFD700;"><div class="veggie-eggplant" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-carrot" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-corn" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-broccoli" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-eggplant" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-corn" style="width:38px;height:38px;"></div></div>
+            <!-- Row 4 -->
+            <div class="board-cell"><div class="veggie-corn" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-eggplant" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-carrot" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-tomato" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-special-h" style="width:38px;height:38px;font-size:16px;">&#8596;</div></div>
+            <div class="board-cell"><div class="veggie-corn" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-tomato" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-broccoli" style="width:38px;height:38px;"></div></div>
+            <!-- Row 5 -->
+            <div class="board-cell"><div class="veggie-carrot" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-broccoli" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-corn" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-eggplant" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-tomato" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-carrot" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-rainbow" style="width:38px;height:38px;font-size:16px;">&#127752;</div></div>
+            <div class="board-cell"><div class="veggie-eggplant" style="width:38px;height:38px;"></div></div>
+            <!-- Row 6 -->
+            <div class="board-cell"><div class="veggie-tomato" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-corn" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-eggplant" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-broccoli" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-carrot" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-tomato" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-broccoli" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-carrot" style="width:38px;height:38px;"></div></div>
+            <!-- Row 7 -->
+            <div class="board-cell"><div class="veggie-eggplant" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-carrot" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-tomato" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-corn" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-special-v" style="width:38px;height:38px;font-size:16px;">&#8597;</div></div>
+            <div class="board-cell"><div class="veggie-eggplant" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-corn" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-tomato" style="width:38px;height:38px;"></div></div>
+            <!-- Row 8 -->
+            <div class="board-cell"><div class="veggie-broccoli" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-tomato" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-corn" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-carrot" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-eggplant" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-broccoli" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-carrot" style="width:38px;height:38px;"></div></div>
+            <div class="board-cell"><div class="veggie-eggplant" style="width:38px;height:38px;"></div></div>
+          </div>
+        </div>
+
+        <!-- Combo popup (example) -->
+        <div class="element" style="left:150px;top:410px;width:240px;height:50px;z-index:20;">
+          <div class="combo-text">COMBO x3!</div>
+        </div>
+
+        <!-- Target panel -->
+        <div class="element panel-light" style="left:10px;top:660px;width:520px;height:100px;z-index:5;"></div>
+        <div class="element text-gold" style="left:195px;top:665px;width:150px;height:25px;z-index:6;font-size:14px;">
+          -- 关卡目标 --
+        </div>
+
+        <!-- Target items -->
+        <div class="element" style="left:40px;top:695px;width:460px;height:55px;z-index:6;justify-content:space-around;">
+          <div style="display:flex;align-items:center;flex-direction:column;gap:2px;">
+            <div class="veggie-eggplant" style="width:32px;height:32px;"></div>
+            <span style="font-size:12px;color:#4A2F1A;font-weight:bold;">12/20</span>
+          </div>
+          <div style="display:flex;align-items:center;flex-direction:column;gap:2px;">
+            <div class="veggie-corn" style="width:32px;height:32px;"></div>
+            <span style="font-size:12px;color:#4A2F1A;font-weight:bold;">8/20</span>
+          </div>
+          <div style="display:flex;align-items:center;flex-direction:column;gap:2px;">
+            <div class="veggie-carrot" style="width:32px;height:32px;"></div>
+            <span style="font-size:12px;color:#27AE60;font-weight:bold;">15/15 &#10003;</span>
+          </div>
+        </div>
+
+        <!-- Pause button -->
+        <div class="element" style="left:230px;top:780px;width:80px;height:40px;z-index:10;">
+          <div class="btn btn-brown" style="width:80px;height:40px;font-size:16px;border-radius:20px;">
+            暂停
+          </div>
+        </div>
+
+        <!-- Annotation arrows -->
+        <div class="element" style="left:10px;top:850px;width:520px;height:90px;z-index:15;">
+          <div style="width:100%;font-size:11px;color:#888;text-align:left;line-height:1.6;">
+            &#9654; 金色高亮边框 = 已选中蔬菜<br>
+            &#9654; &#8596; 水平条纹 = 4连线特殊蔬菜（消除整行）<br>
+            &#9654; &#8597; 垂直条纹 = 4连线特殊蔬菜（消除整列）<br>
+            &#9654; &#127752; 彩虹球 = 5连线特殊蔬菜（消除全部同种）<br>
+            &#9654; COMBO = 连锁消除时弹出的倍率提示
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== LEVEL INTRO POPUP ===== -->
+    <div class="screen-wrapper">
+      <div class="screen-label">关卡开始弹窗 (level_intro)</div>
+      <div class="canvas" style="background: #F5E6D0;">
+        <!-- Dimmed background -->
+        <div class="element" style="left:0;top:0;width:540px;height:960px;background:rgba(0,0,0,0.4);z-index:10;"></div>
+
+        <!-- Popup panel -->
+        <div class="element panel-overlay" style="left:60px;top:220px;width:420px;height:450px;z-index:11;flex-direction:column;padding:30px;">
+          <!-- Level name -->
+          <div style="font-size:34px;font-weight:bold;color:#4A2F1A;margin-bottom:5px;">关卡 3</div>
+          <div style="font-size:16px;color:#6B4226;margin-bottom:25px;">蔬菜大会</div>
+
+          <!-- Divider -->
+          <div style="width:300px;height:2px;background:#C8A46E;margin-bottom:20px;"></div>
+
+          <!-- Target section -->
+          <div style="font-size:14px;color:#8B6914;margin-bottom:12px;">消除目标：</div>
+          <div style="display:flex;gap:30px;margin-bottom:15px;">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+              <div class="veggie-eggplant" style="width:40px;height:40px;"></div>
+              <span style="font-size:14px;font-weight:bold;color:#4A2F1A;">x20</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+              <div class="veggie-corn" style="width:40px;height:40px;"></div>
+              <span style="font-size:14px;font-weight:bold;color:#4A2F1A;">x20</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+              <div class="veggie-carrot" style="width:40px;height:40px;"></div>
+              <span style="font-size:14px;font-weight:bold;color:#4A2F1A;">x15</span>
+            </div>
+          </div>
+
+          <div style="font-size:14px;color:#8B6914;margin-bottom:5px;">目标分数：<strong style="color:#E74C3C;">3,500</strong></div>
+
+          <!-- Moves -->
+          <div style="font-size:20px;color:#C0392B;font-weight:bold;margin-top:10px;margin-bottom:25px;">
+            步数限制：20
+          </div>
+
+          <!-- Buttons -->
+          <div class="btn btn-green" style="width:180px;height:55px;font-size:22px;border-radius:28px;margin-bottom:12px;box-shadow:0 3px 10px rgba(0,0,0,0.2);">
+            开始!
+          </div>
+          <div class="btn btn-brown" style="width:120px;height:36px;font-size:14px;border-radius:18px;">
+            返回
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="screen-section">
+
+    <!-- ===== PAUSED SCREEN ===== -->
+    <div class="screen-wrapper">
+      <div class="screen-label">暂停 (paused)</div>
+      <div class="canvas" style="background: #F5E6D0;width:270px;height:480px;transform:scale(1);transform-origin:top left;">
+        <div class="element" style="left:0;top:0;width:270px;height:480px;background:rgba(0,0,0,0.5);z-index:10;"></div>
+        <div class="element panel-overlay" style="left:25px;top:100px;width:220px;height:260px;z-index:11;flex-direction:column;gap:12px;">
+          <div style="font-size:28px;font-weight:bold;color:#4A2F1A;">暂停</div>
+          <div class="btn btn-green" style="width:160px;height:42px;font-size:18px;border-radius:21px;">继续</div>
+          <div class="btn btn-blue" style="width:160px;height:42px;font-size:18px;border-radius:21px;">重玩</div>
+          <div class="btn btn-brown" style="width:160px;height:42px;font-size:18px;border-radius:21px;">退出</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== LEVEL COMPLETE SCREEN ===== -->
+    <div class="screen-wrapper">
+      <div class="screen-label">过关 (level_complete)</div>
+      <div class="canvas" style="background: #F5E6D0;width:270px;height:480px;">
+        <div class="element" style="left:0;top:0;width:270px;height:480px;background:rgba(0,0,0,0.3);z-index:10;"></div>
+        <div class="element panel-overlay" style="left:15px;top:60px;width:240px;height:350px;z-index:11;flex-direction:column;gap:8px;">
+          <div style="font-size:32px;font-weight:bold;color:#27AE60;">过关!</div>
+          <div style="display:flex;gap:8px;font-size:28px;color:#F1C40F;">
+            &#9733;&#9733;&#9734;
+          </div>
+          <div style="font-size:18px;color:#4A2F1A;font-weight:bold;">分数: 5,200</div>
+          <div style="font-size:12px;color:#6B4226;text-align:center;line-height:1.6;">
+            茄子: 20/20 &#10003;<br>
+            玉米: 20/20 &#10003;<br>
+            胡萝卜: 15/15 &#10003;
+          </div>
+          <div class="btn btn-green" style="width:160px;height:42px;font-size:16px;border-radius:21px;margin-top:4px;">下一关</div>
+          <div class="btn btn-brown" style="width:120px;height:32px;font-size:13px;border-radius:16px;">关卡选择</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== LEVEL FAILED SCREEN ===== -->
+    <div class="screen-wrapper">
+      <div class="screen-label">失败 (level_failed)</div>
+      <div class="canvas" style="background: #F5E6D0;width:270px;height:480px;">
+        <div class="element" style="left:0;top:0;width:270px;height:480px;background:rgba(0,0,0,0.4);z-index:10;"></div>
+        <div class="element panel-overlay" style="left:20px;top:90px;width:230px;height:280px;z-index:11;flex-direction:column;gap:10px;">
+          <div style="font-size:26px;font-weight:bold;color:#C0392B;">步数用完了</div>
+          <div style="font-size:18px;color:#4A2F1A;">分数: 2,100</div>
+          <div style="font-size:13px;color:#6B4226;">再试一次，你可以的!</div>
+          <div class="btn btn-red" style="width:160px;height:42px;font-size:16px;border-radius:21px;margin-top:4px;">重试</div>
+          <div class="btn btn-brown" style="width:120px;height:32px;font-size:13px;border-radius:16px;">关卡选择</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2>2. 素材清单 (Assets)</h2>
+  <!-- ============================================================ -->
+
+  <h3>2.1 蔬菜精灵 (Veggie Sprites)</h3>
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>预览</th>
+      <th>尺寸</th>
+      <th>描述</th>
+      <th>渲染模式</th>
+    </tr>
+    <tr>
+      <td>veggie_tomato</td>
+      <td><span class="veggie-swatch" style="background:#E74C3C;"></span>番茄</td>
+      <td>56x56</td>
+      <td>圆润饱满的红色番茄，绿色蒂和小叶子，卡通大眼微笑</td>
+      <td><span class="tag tag-image">image</span></td>
+    </tr>
+    <tr>
+      <td>veggie_carrot</td>
+      <td><span class="veggie-swatch" style="background:#E67E22;"></span>胡萝卜</td>
+      <td>56x56</td>
+      <td>橙色锥形胡萝卜，蓬松绿叶，卡通大眼开心表情</td>
+      <td><span class="tag tag-image">image</span></td>
+    </tr>
+    <tr>
+      <td>veggie_eggplant</td>
+      <td><span class="veggie-swatch" style="background:#8E44AD;"></span>茄子</td>
+      <td>56x56</td>
+      <td>紫色椭圆茄子，绿色花萼，卡通大眼淘气表情</td>
+      <td><span class="tag tag-image">image</span></td>
+    </tr>
+    <tr>
+      <td>veggie_broccoli</td>
+      <td><span class="veggie-swatch" style="background:#27AE60;"></span>西兰花</td>
+      <td>56x56</td>
+      <td>深绿色蓬松花冠小树状，浅绿色茎，卡通大眼温和笑容</td>
+      <td><span class="tag tag-image">image</span></td>
+    </tr>
+    <tr>
+      <td>veggie_corn</td>
+      <td><span class="veggie-swatch" style="background:#F1C40F;"></span>玉米</td>
+      <td>56x56</td>
+      <td>金黄色玉米棒，半包裹外皮露出玉米粒，卡通大眼灿烂笑容</td>
+      <td><span class="tag tag-image">image</span></td>
+    </tr>
+    <tr>
+      <td>veggie_chili</td>
+      <td><span class="veggie-swatch" style="background:#C0392B;"></span>辣椒</td>
+      <td>56x56</td>
+      <td>鲜红修长辣椒，绿色蒂，卡通大眼调皮表情，头顶小火苗</td>
+      <td><span class="tag tag-image">image</span></td>
+    </tr>
+  </table>
+
+  <h3>2.2 特殊蔬菜 (Special Gems)</h3>
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>预览</th>
+      <th>尺寸</th>
+      <th>描述</th>
+      <th>渲染模式</th>
+    </tr>
+    <tr>
+      <td>special_stripe_h</td>
+      <td><span class="veggie-swatch" style="background:linear-gradient(0deg,#F39C12,#FFD700,#F39C12);"></span>水平条纹</td>
+      <td>56x56</td>
+      <td>水平条纹光效覆盖层（4连线生成，激活消整行）</td>
+      <td><span class="tag tag-image">image</span></td>
+    </tr>
+    <tr>
+      <td>special_stripe_v</td>
+      <td><span class="veggie-swatch" style="background:linear-gradient(90deg,#F39C12,#FFD700,#F39C12);"></span>垂直条纹</td>
+      <td>56x56</td>
+      <td>垂直条纹光效覆盖层（4连线生成，激活消整列）</td>
+      <td><span class="tag tag-image">image</span></td>
+    </tr>
+    <tr>
+      <td>special_rainbow</td>
+      <td><span class="veggie-swatch" style="background:linear-gradient(135deg,#E74C3C,#F1C40F,#27AE60,#3498DB,#8E44AD);"></span>彩虹球</td>
+      <td>56x56</td>
+      <td>七彩闪耀宝石球，彩虹流光（5连线生成，消所有同种）</td>
+      <td><span class="tag tag-image">image</span></td>
+    </tr>
+  </table>
+
+  <h3>2.3 背景与装饰 (Backgrounds)</h3>
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>尺寸</th>
+      <th>描述</th>
+      <th>渲染模式</th>
+    </tr>
+    <tr>
+      <td>bg_game</td>
+      <td>540x960</td>
+      <td>温暖农场背景：浅黄绿色调，远处农田小山丘，近处木栅栏草地</td>
+      <td><span class="tag tag-image">image</span></td>
+    </tr>
+    <tr>
+      <td>bg_menu</td>
+      <td>540x960</td>
+      <td>主菜单农场场景：蓝天白云，绿色草地，红色谷仓风车，蔬菜装饰</td>
+      <td><span class="tag tag-image">image</span></td>
+    </tr>
+    <tr>
+      <td>logo_title</td>
+      <td>400x120</td>
+      <td>游戏标题 Logo："蔬菜消消乐"彩色卡通气泡字</td>
+      <td><span class="tag tag-image">image</span></td>
+    </tr>
+  </table>
+
+  <h3>2.4 UI 元素 (Placeholder Rendering)</h3>
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>尺寸</th>
+      <th>描述</th>
+      <th>渲染模式</th>
+    </tr>
+    <tr>
+      <td>board_cell</td>
+      <td>56x56</td>
+      <td>棋盘格子背景，浅棕色圆角方形</td>
+      <td><span class="tag tag-placeholder">placeholder</span></td>
+    </tr>
+    <tr>
+      <td>cell_highlight</td>
+      <td>56x56</td>
+      <td>选中蔬菜的金黄色高亮边框</td>
+      <td><span class="tag tag-placeholder">placeholder</span></td>
+    </tr>
+    <tr>
+      <td>icon_star_empty / icon_star_filled</td>
+      <td>24x24</td>
+      <td>空心/实心星星图标</td>
+      <td><span class="tag tag-placeholder">placeholder</span></td>
+    </tr>
+    <tr>
+      <td>icon_moves / icon_score</td>
+      <td>36x36</td>
+      <td>步数图标（脚印）/ 分数图标（星星）</td>
+      <td><span class="tag tag-placeholder">placeholder</span></td>
+    </tr>
+    <tr>
+      <td>panel_top / panel_target</td>
+      <td>520x120 / 520x100</td>
+      <td>顶部信息面板 / 目标面板</td>
+      <td><span class="tag tag-placeholder">placeholder</span></td>
+    </tr>
+    <tr>
+      <td>btn_start / btn_level / btn_pause</td>
+      <td>各种</td>
+      <td>开始按钮 / 关卡按钮 / 暂停按钮</td>
+      <td><span class="tag tag-placeholder">placeholder</span></td>
+    </tr>
+    <tr>
+      <td>particle_sparkle</td>
+      <td>16x16</td>
+      <td>消除时的金色闪光粒子</td>
+      <td><span class="tag tag-placeholder">placeholder</span></td>
+    </tr>
+  </table>
+
+  <!-- ============================================================ -->
+  <h2>3. 关卡参数一览</h2>
+  <!-- ============================================================ -->
+
+  <table>
+    <tr>
+      <th>关卡</th>
+      <th>名称</th>
+      <th>棋盘</th>
+      <th>蔬菜种类</th>
+      <th>步数</th>
+      <th>1星</th>
+      <th>2星</th>
+      <th>3星</th>
+      <th>消除目标</th>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>欢迎来到菜园</td>
+      <td>6x6</td>
+      <td>4种</td>
+      <td>25</td>
+      <td>1000</td>
+      <td>2000</td>
+      <td>3000</td>
+      <td>番茄x10, 胡萝卜x10</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>丰收时节</td>
+      <td>7x7</td>
+      <td>5种</td>
+      <td>22</td>
+      <td>2000</td>
+      <td>4000</td>
+      <td>6000</td>
+      <td>番茄x15, 西兰花x15, 玉米x10</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>蔬菜大会</td>
+      <td>8x8</td>
+      <td>5种</td>
+      <td>20</td>
+      <td>3500</td>
+      <td>6000</td>
+      <td>9000</td>
+      <td>茄子x20, 玉米x20, 胡萝卜x15</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>辣椒来了</td>
+      <td>8x8</td>
+      <td>6种</td>
+      <td>18</td>
+      <td>5000</td>
+      <td>8000</td>
+      <td>12000</td>
+      <td>辣椒x15, 番茄x20, 西兰花x20, 茄子x15</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>菜园大丰收</td>
+      <td>9x9</td>
+      <td>6种</td>
+      <td>15</td>
+      <td>7000</td>
+      <td>11000</td>
+      <td>16000</td>
+      <td>全部6种各15-25个</td>
+    </tr>
+  </table>
+
+  <!-- ============================================================ -->
+  <h2>4. 计分与连击系统</h2>
+  <!-- ============================================================ -->
+
+  <div class="highlight-box">
+    <h3 style="margin-top:0;">基础得分</h3>
+    <table>
+      <tr><th>消除类型</th><th>基础分</th><th>说明</th></tr>
+      <tr><td>3连线 (match_3)</td><td>50</td><td>最基本的消除</td></tr>
+      <tr><td>4连线 (match_4)</td><td>120</td><td>生成条纹特殊蔬菜</td></tr>
+      <tr><td>5连线 (match_5)</td><td>300</td><td>生成彩虹蔬菜</td></tr>
+      <tr><td>L/T型 (match_L_T)</td><td>200</td><td>两条3连线交叉</td></tr>
+      <tr><td>条纹激活</td><td>+150</td><td>消除整行/列额外加分</td></tr>
+      <tr><td>彩虹激活</td><td>+500</td><td>全屏同色消除额外加分</td></tr>
+    </table>
+
+    <h3>连锁倍率 (Cascade Multiplier)</h3>
+    <p style="font-size:14px;line-height:1.8;">
+      <strong>公式：</strong><code>score = base_points x (1 + 0.5 x (cascade_level - 1))</code><br>
+      第1次消除: 1.0x | 第2次: 1.5x | 第3次: 2.0x | 第4次: 2.5x | ... | 最高: 5.0x
+    </p>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2>5. 游戏状态流程</h2>
+  <!-- ============================================================ -->
+
+  <div style="display:flex;justify-content:center;margin:20px 0;">
+    <svg width="800" height="380" viewBox="0 0 800 380">
+      <!-- States -->
+      <rect x="10" y="160" width="100" height="50" rx="10" fill="#3498DB" stroke="#2980B9" stroke-width="2"/>
+      <text x="60" y="190" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">menu</text>
+
+      <rect x="170" y="160" width="120" height="50" rx="10" fill="#3498DB" stroke="#2980B9" stroke-width="2"/>
+      <text x="230" y="190" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">level_select</text>
+
+      <rect x="350" y="160" width="110" height="50" rx="10" fill="#F39C12" stroke="#E67E22" stroke-width="2"/>
+      <text x="405" y="190" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">level_intro</text>
+
+      <rect x="520" y="160" width="100" height="50" rx="10" fill="#27AE60" stroke="#1E8449" stroke-width="2"/>
+      <text x="570" y="190" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">playing</text>
+
+      <rect x="690" y="160" width="100" height="50" rx="10" fill="#95A5A6" stroke="#7F8C8D" stroke-width="2"/>
+      <text x="740" y="190" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">paused</text>
+
+      <rect x="440" y="20" width="130" height="50" rx="10" fill="#27AE60" stroke="#1E8449" stroke-width="2"/>
+      <text x="505" y="50" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">level_complete</text>
+
+      <rect x="440" y="300" width="130" height="50" rx="10" fill="#E74C3C" stroke="#C0392B" stroke-width="2"/>
+      <text x="505" y="330" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">level_failed</text>
+
+      <!-- Arrows -->
+      <defs>
+        <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill="#666"/>
+        </marker>
+      </defs>
+
+      <!-- menu -> level_select -->
+      <line x1="110" y1="185" x2="165" y2="185" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+      <!-- level_select -> level_intro -->
+      <line x1="290" y1="185" x2="345" y2="185" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+      <!-- level_intro -> playing -->
+      <line x1="460" y1="185" x2="515" y2="185" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+      <!-- playing -> paused -->
+      <line x1="620" y1="185" x2="685" y2="185" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+      <!-- paused -> playing (return) -->
+      <path d="M 740,210 Q 740,240 640,240 Q 570,240 570,215" fill="none" stroke="#999" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrowhead)"/>
+
+      <!-- playing -> level_complete -->
+      <path d="M 555,160 Q 540,100 520,75" fill="none" stroke="#27AE60" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+      <!-- playing -> level_failed -->
+      <path d="M 555,210 Q 540,270 520,295" fill="none" stroke="#E74C3C" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+      <!-- level_complete -> level_select -->
+      <path d="M 440,45 Q 300,30 250,155" fill="none" stroke="#999" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrowhead)"/>
+
+      <!-- level_complete -> level_intro (next level) -->
+      <path d="M 505,70 Q 430,120 420,155" fill="none" stroke="#999" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrowhead)"/>
+
+      <!-- level_failed -> playing (retry) -->
+      <path d="M 570,325 Q 620,340 620,280 Q 615,220 585,215" fill="none" stroke="#999" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrowhead)"/>
+
+      <!-- level_failed -> level_select -->
+      <path d="M 440,325 Q 280,350 240,215" fill="none" stroke="#999" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrowhead)"/>
+
+      <!-- level_select -> menu (back) -->
+      <path d="M 190,210 Q 140,240 80,215" fill="none" stroke="#999" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrowhead)"/>
+
+      <!-- paused -> level_select (quit) -->
+      <path d="M 740,210 Q 750,320 500,360 Q 250,380 230,215" fill="none" stroke="#999" stroke-width="1" stroke-dasharray="4,4" marker-end="url(#arrowhead)"/>
+    </svg>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2>6. 音频清单</h2>
+  <!-- ============================================================ -->
+
+  <div class="highlight-box">
+    <p><strong>音频风格：</strong> cartoon (卡通风格，与视觉风格一致)</p>
+    <p><strong>BGM：</strong> 无（用户不需要背景音乐）</p>
+    <p><strong>音效模式：</strong> 全部使用 synthesized（Web Audio API / sfxr 合成）</p>
+  </div>
+
+  <table>
+    <tr>
+      <th>音效 ID</th>
+      <th>触发事件</th>
+      <th>模式</th>
+      <th>听感描述</th>
+    </tr>
+    <tr>
+      <td>sfx_select</td>
+      <td>select - 选中蔬菜</td>
+      <td><span class="tag tag-synth">synthesized</span></td>
+      <td>短促清脆的"叮"一声</td>
+    </tr>
+    <tr>
+      <td>sfx_swap</td>
+      <td>swap - 交换蔬菜</td>
+      <td><span class="tag tag-synth">synthesized</span></td>
+      <td>轻快的"嗖"一声滑动音</td>
+    </tr>
+    <tr>
+      <td>sfx_invalid_swap</td>
+      <td>invalid_swap - 无效交换</td>
+      <td><span class="tag tag-synth">synthesized</span></td>
+      <td>低沉"嗡嗡"两下拒绝音</td>
+    </tr>
+    <tr>
+      <td>sfx_match_3</td>
+      <td>match_3 - 3消</td>
+      <td><span class="tag tag-synth">synthesized</span></td>
+      <td>上升音阶"叮叮叮"三声</td>
+    </tr>
+    <tr>
+      <td>sfx_match_4</td>
+      <td>match_4 - 4消</td>
+      <td><span class="tag tag-synth">synthesized</span></td>
+      <td>更响亮更高音调，带闪亮尾音</td>
+    </tr>
+    <tr>
+      <td>sfx_match_5</td>
+      <td>match_5 - 5消</td>
+      <td><span class="tag tag-synth">synthesized</span></td>
+      <td>快速上升琶音加闪亮余韵</td>
+    </tr>
+    <tr>
+      <td>sfx_cascade</td>
+      <td>cascade - 连锁消除</td>
+      <td><span class="tag tag-synth">synthesized</span></td>
+      <td>每次 cascade 音调递增（C, D, E...）</td>
+    </tr>
+    <tr>
+      <td>sfx_combo</td>
+      <td>combo - 高连击</td>
+      <td><span class="tag tag-synth">synthesized</span></td>
+      <td>明亮和弦加闪光音</td>
+    </tr>
+    <tr>
+      <td>sfx_special_create</td>
+      <td>special_create - 生成特殊蔬菜</td>
+      <td><span class="tag tag-synth">synthesized</span></td>
+      <td>上升魔法音加闪亮铃声</td>
+    </tr>
+    <tr>
+      <td>sfx_special_activate</td>
+      <td>special_activate - 激活特殊蔬菜</td>
+      <td><span class="tag tag-synth">synthesized</span></td>
+      <td>强力能量释放爆发音</td>
+    </tr>
+    <tr>
+      <td>sfx_veggie_fall</td>
+      <td>veggie_fall - 蔬菜下落</td>
+      <td><span class="tag tag-synth">synthesized</span></td>
+      <td>柔和的"嘟"一声着陆音</td>
+    </tr>
+    <tr>
+      <td>sfx_star_earn</td>
+      <td>star_earn - 获得星星</td>
+      <td><span class="tag tag-synth">synthesized</span></td>
+      <td>明亮上升琶音</td>
+    </tr>
+    <tr>
+      <td>sfx_level_complete</td>
+      <td>level_complete - 过关</td>
+      <td><span class="tag tag-synth">synthesized</span></td>
+      <td>欢快上升和弦序列加结尾铃声</td>
+    </tr>
+    <tr>
+      <td>sfx_level_failed</td>
+      <td>level_failed - 失败</td>
+      <td><span class="tag tag-synth">synthesized</span></td>
+      <td>缓慢下降音调，柔和不刺耳</td>
+    </tr>
+    <tr>
+      <td>sfx_button_click</td>
+      <td>click - UI按钮点击</td>
+      <td><span class="tag tag-synth">synthesized</span></td>
+      <td>短促卡通按钮"嘀"</td>
+    </tr>
+    <tr>
+      <td>sfx_no_moves</td>
+      <td>warning - 步数将尽</td>
+      <td><span class="tag tag-synth">synthesized</span></td>
+      <td>急促两声提示音</td>
+    </tr>
+  </table>
+
+  <!-- ============================================================ -->
+  <h2>7. 特效清单</h2>
+  <!-- ============================================================ -->
+
+  <table>
+    <tr>
+      <th>效果 ID</th>
+      <th>类型</th>
+      <th>时长</th>
+      <th>对应音效</th>
+      <th>描述</th>
+    </tr>
+    <tr>
+      <td>match_disappear</td>
+      <td>scale_fade</td>
+      <td>300ms</td>
+      <td>sfx_match_3/4/5</td>
+      <td>匹配蔬菜缩小淡出 + 闪光粒子</td>
+    </tr>
+    <tr>
+      <td>veggie_fall</td>
+      <td>gravity_drop</td>
+      <td>200ms</td>
+      <td>sfx_veggie_fall</td>
+      <td>蔬菜下落弹跳</td>
+    </tr>
+    <tr>
+      <td>swap_animation</td>
+      <td>slide</td>
+      <td>200ms</td>
+      <td>sfx_swap</td>
+      <td>蔬菜滑动交换</td>
+    </tr>
+    <tr>
+      <td>invalid_swap</td>
+      <td>shake_return</td>
+      <td>300ms</td>
+      <td>sfx_invalid_swap</td>
+      <td>抖动返回原位</td>
+    </tr>
+    <tr>
+      <td>combo_popup</td>
+      <td>scale_bounce_fade</td>
+      <td>800ms</td>
+      <td>sfx_combo</td>
+      <td>连击文字弹出放大后淡出</td>
+    </tr>
+    <tr>
+      <td>special_create</td>
+      <td>flash_glow</td>
+      <td>500ms</td>
+      <td>sfx_special_create</td>
+      <td>特殊蔬菜生成白光闪烁</td>
+    </tr>
+    <tr>
+      <td>stripe_activate</td>
+      <td>line_blast</td>
+      <td>400ms</td>
+      <td>sfx_special_activate</td>
+      <td>光线贯穿整行/列</td>
+    </tr>
+    <tr>
+      <td>rainbow_activate</td>
+      <td>rainbow_wave</td>
+      <td>600ms</td>
+      <td>sfx_special_activate</td>
+      <td>彩色波纹从中心扩散</td>
+    </tr>
+    <tr>
+      <td>level_complete_celebration</td>
+      <td>confetti_burst</td>
+      <td>2000ms</td>
+      <td>sfx_level_complete</td>
+      <td>顶部飞出彩色蔬菜纸片</td>
+    </tr>
+  </table>
+
+  <!-- ============================================================ -->
+  <h2>8. 核心机制设计依据</h2>
+  <!-- ============================================================ -->
+
+  <div class="highlight-box">
+    <h3 style="margin-top:0;">Match-3 核心循环</h3>
+    <p style="font-size:14px;line-height:2;">
+      <strong>输入 &#8594; 匹配 &#8594; 消除 &#8594; 下落 &#8594; 级联 &#8594; 得分/目标</strong><br>
+      玩家交换相邻蔬菜 &#8594; 检测3+连线 &#8594; 匹配的蔬菜消失（视觉+音效） &#8594;
+      上方蔬菜下落填充 &#8594; 检查新匹配（级联/cascade） &#8594; 计算得分和目标进度
+    </p>
+
+    <h3>难度设计多维度递进</h3>
+    <ul style="font-size:14px;line-height:2;">
+      <li><strong>棋盘大小</strong>：6x6 &#8594; 7x7 &#8594; 8x8 &#8594; 8x8 &#8594; 9x9（更大=更多蔬菜，但也更难找到最优匹配）</li>
+      <li><strong>蔬菜种类</strong>：4 &#8594; 5 &#8594; 5 &#8594; 6 &#8594; 6（种类越多，随机匹配概率越低）</li>
+      <li><strong>步数限制</strong>：25 &#8594; 22 &#8594; 20 &#8594; 18 &#8594; 15（容错空间递减）</li>
+      <li><strong>目标数量</strong>：2种各10个 &#8594; 3种10-15个 &#8594; ... &#8594; 6种各15-25个</li>
+    </ul>
+
+    <h3>参考来源</h3>
+    <ul style="font-size:13px;line-height:1.8;">
+      <li>45 Match-3 Mechanics - Game Developer (gamedeveloper.com)</li>
+      <li>What is a Match 3 Game - Retro Style Games (retrostylegames.com)</li>
+      <li>前开心消消乐关卡主策分享 - 腾讯游戏学堂 (gwb.tencent.com)</li>
+      <li>设计一个优雅的消除游戏关卡 - 知乎 (zhuanlan.zhihu.com)</li>
+    </ul>
+  </div>
+
+</body>
+</html>
